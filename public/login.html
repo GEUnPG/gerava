@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FOA Med - Login</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+</head>
+<body>
+  <header class="header">
+    <h1>FOA Med</h1>
+    <nav>
+      <a href="/index.html" class="btn btn-outline-light me-2">Início</a>
+      <a href="/consulta.html" class="btn btn-outline-light">Consultar Provas</a>
+    </nav>
+  </header>
+  <main class="container d-flex justify-content-center align-items-center min-vh-100">
+    <div class="card shadow-sm p-4 animate__animated animate__fadeIn" style="max-width: 400px; width: 100%;">
+      <h2 class="h5 fw-medium mb-4 text-center">Login FOA Med</h2>
+      <form id="login-form">
+        <div class="mb-3">
+          <label for="username" class="form-label">Usuário</label>
+          <input type="text" id="username" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Senha</label>
+          <input type="password" id="password" class="form-control" required>
+        </div>
+        <button type="submit" id="login-button" class="btn btn-primary w-100">Entrar</button>
+      </form>
+      <div id="feedback" class="mt-3 text-center"></div>
+    </div>
+  </main>
+  <footer class="text-center py-4 bg-light">
+    <p class="mb-0">© 2025 FOA Med. Todos os direitos reservados.</p>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    let blockTimer = null;
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const loginButton = document.getElementById('login-button');
+
+      loginButton.disabled = true;
+
+    //   try {
+    //     const response = await fetch('/api/login', {
+    //       method: 'POST',
+    //       headers: { 'Content-Type': 'application/json' },
+    //       body: JSON.stringify({ username, password }),
+    //       credentials: 'include'
+    //     });
+
+    //     const result = await response.json();
+    //     if (response.ok) {
+    //       window.location.href = '/dashboard.html';
+    //     } else {
+    //       if (result.blocked) {
+    //         if (result.permanent) {
+    //           showFeedback(
+    //             'Este dispositivo foi bloqueado permanentemente. Contate o administrador.',
+    //             'error'
+    //           );
+    //         } else {
+    //           const remainingSeconds = result.remainingSeconds;
+    //           showFeedback(
+    //             `Muitas tentativas. Tente novamente em ${Math.ceil(remainingSeconds / 60)} minutos.`,
+    //             'error'
+    //           );
+    //           startBlockTimer(remainingSeconds);
+    //         }
+    //       } else {
+    //         showFeedback(result.error || 'Erro ao fazer login.', 'error');
+    //       }
+    //     }
+    //   } catch (error) {
+    //     console.error('Erro ao fazer login:', error);
+    //     showFeedback('Erro ao fazer login: ' + error.message, 'error');
+    //   } finally {
+    //     if (!blockTimer && !result?.blocked) {
+    //       loginButton.disabled = false;
+    //     }
+    //   }
+    // });
+
+    try { //remover se der ruim
+  const response = await fetch('/api/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password }),
+    credentials: 'include'
+  });
+
+  const result = await response.json();
+  if (response.ok) {
+    window.location.href = '/dashboard.html';
+  } else if (response.status === 429) {
+    showFeedback('Muitas requisições. Tente novamente após 15 minutos.', 'error');
+    startBlockTimer(15 * 60);
+  } else if (result.blocked) {
+    if (result.permanent) {
+      showFeedback('Este dispositivo foi bloqueado permanentemente. Contate o administrador.', 'error');
+    } else {
+      const remainingSeconds = result.remainingSeconds;
+      showFeedback(`Muitas tentativas. Tente novamente em ${Math.ceil(remainingSeconds / 60)} minutos.`, 'error');
+      startBlockTimer(remainingSeconds);
+    }
+  } else {
+    showFeedback(result.error || 'Erro ao fazer login.', 'error');
+  }
+} catch (error) {
+  console.error('Erro ao fazer login:', error);
+  showFeedback('Erro ao fazer login: ' + error.message, 'error');
+}
+    });//remover se der ruim
+
+    function startBlockTimer(seconds) {
+      const loginButton = document.getElementById('login-button');
+      loginButton.disabled = true;
+
+      if (blockTimer) clearInterval(blockTimer);
+
+      let timeLeft = seconds;
+      updateTimerDisplay(timeLeft);
+
+      blockTimer = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay(timeLeft);
+
+        if (timeLeft <= 0) {
+          clearInterval(blockTimer);
+          blockTimer = null;
+          loginButton.disabled = false;
+          showFeedback('Bloqueio expirado. Tente fazer login novamente.', 'success');
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = `Bloqueado. Tente novamente em ${minutes}:${secs.toString().padStart(2, '0')}.`;
+      feedback.className = 'text-error';
+      feedback.style.display = 'block';
+    }
+
+    function showFeedback(message, type) {
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = message;
+      feedback.className = `text-${type}`;
+      feedback.style.display = 'block';
+
+      if (!message.includes('Bloqueado') && !message.includes('permanentemente')) {
+        setTimeout(() => {
+          feedback.style.display = 'none';
+        }, 5000);
+      }
+
+      showToast(message, type);
+    }
+
+    function showToast(message, type) {
+      const existingToasts = document.querySelectorAll('.toast');
+      existingToasts.forEach(toast => toast.remove());
+
+      const toast = document.createElement('div');
+      toast.className = 'toast d-flex align-items-center';
+      toast.innerHTML = `
+        <i class="fas fa-${type === 'success' ? 'check-circle' : 'times-circle'} me-2"></i>
+        <span>${message}</span>
+      `;
+      toast.style.position = 'fixed';
+      toast.style.bottom = '20px';
+      toast.style.right = '20px';
+      toast.style.padding = '12px 20px';
+      toast.style.borderRadius = '8px';
+      toast.style.zIndex = '1000';
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      toast.style.transform = 'translateY(20px)';
+
+      if (type === 'success') {
+        toast.style.background = '#10b981';
+        toast.style.color = '#fff';
+      } else if (type === 'error') {
+        toast.style.background = '#ef4444';
+        toast.style.color = '#fff';
+      }
+
+      document.body.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+      }, 100);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 5000);
+    }
+  </script>
+</body>
+</html>

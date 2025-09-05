@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FOA Med - Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+</head>
+<body>
+  <header class="header">
+    <h1>FOA Med - Dashboard</h1>
+    <div class="user-info">
+      <span id="user-greeting">Bem-vindo, Carregando...</span>
+      <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+    </div>
+  </header>
+  <main class="container my-5">
+    <h2 class="text-center mb-4">Escolha uma Opção</h2>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-4">
+        <a href="/gerenciar.html" class="card shadow-sm p-4 text-center text-decoration-none animate__animated animate__fadeIn">
+          <i class="fas fa-calendar-check fa-3x mb-3 text-primary"></i>
+          <h3 class="h5 fw-medium">Gerenciar Avaliações</h3>
+          <p class="text-muted">Crie, edite e visualize avaliações por módulo, disciplina ou data.</p>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="/admin.html" class="card shadow-sm p-4 text-center text-decoration-none animate__animated animate__fadeIn">
+          <i class="fas fa-robot fa-3x mb-3 text-primary"></i>
+          <h3 class="h5 fw-medium">Administrar Chatbot</h3>
+          <p class="text-muted">Controle notificações, respostas automáticas e envie mensagens para grupos.</p>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="/consulta.html" class="card shadow-sm p-4 text-center text-decoration-none animate__animated animate__fadeIn">
+          <i class="fas fa-search fa-3x mb-3 text-primary"></i>
+          <h3 class="h5 fw-medium">Consultar Provas</h3>
+          <p class="text-muted">Consulte provas disponíveis por módulo, data ou disciplina.</p>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="/professor.html" class="card shadow-sm p-4 text-center text-decoration-none animate__animated animate__fadeIn">
+          <i class="fas fa-chalkboard-teacher fa-3x mb-3 text-primary"></i>
+          <h3 class="h5 fw-medium">Gerenciar Professores</h3>
+          <p class="text-muted">Crie, edite e visualize professores do sistema.</p>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="/usuarios.html" class="card shadow-sm p-4 text-center text-decoration-none animate__animated animate__fadeIn">
+          <i class="fas fa-users fa-3x mb-3 text-primary"></i>
+          <h3 class="h5 fw-medium">Gerenciar Usuários</h3>
+          <p class="text-muted">Crie, edite e visualize usuários do sistema.</p>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="/situacao_aval.html" class="card shadow-sm p-4 text-center text-decoration-none animate__animated animate__fadeIn">
+        <i class="fas fa-tags fa-3x mb-3 text-primary"></i>
+        <h3 class="h5 fw-medium">Gerenciar Situações de Avaliação</h3>
+        <p class="text-muted">Crie, edite e visualize situações de avaliação do sistema.</p>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="/tipo_aval.html" class="card shadow-sm p-4 text-center text-decoration-none animate__animated animate__fadeIn">
+        <i class="fas fa-list-alt fa-3x mb-3 text-primary"></i>
+        <h3 class="h5 fw-medium">Gerenciar Tipos de Avaliação</h3>
+        <p class="text-muted">Crie, edite e visualize tipos de avaliação do sistema.</p>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="/modulo.html" class="card shadow-sm p-4 text-center text-decoration-none animate__animated animate__fadeIn">
+        <i class="fas fa-book fa-3x mb-3 text-primary"></i>
+        <h3 class="h5 fw-medium">Gerenciar Módulos</h3>
+        <p class="text-muted">Crie, edite e visualize módulos do sistema.</p>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="/disciplina.html" class="card shadow-sm p-4 text-center text-decoration-none animate__animated animate__fadeIn">
+        <i class="fas fa-graduation-cap fa-3x mb-3 text-primary"></i>
+        <h3 class="h5 fw-medium">Gerenciar Disciplinas</h3>
+        <p class="text-muted">Crie, edite e visualize disciplinas do sistema.</p>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="/laboratorio.html" class="card shadow-sm p-4 text-center text-decoration-none animate__animated animate__fadeIn">
+        <i class="fas fa-desktop fa-3x mb-3 text-primary"></i>
+        <h3 class="h5 fw-medium">Gerenciar Conjuntos de Laboratórios</h3>
+        <p class="text-muted">Crie, edite e visualize conjuntos de laboratórios do sistema.</p>
+        </a>
+      </div>
+      <div class="col-md-4">
+        <a href="/arquivo.html" class="card shadow-sm p-4 text-center text-decoration-none animate__animated animate__fadeIn">
+        <i class="fas fa-archive fa-3x mb-3 text-primary"></i>
+        <h3 class="h5 fw-medium">Gerenciar Avaliações Arquivadas</h3>
+        <p class="text-muted">Visualize, restaure ou exclua permanentemente avaliações arquivadas.</p>
+        </a>
+      </div>
+   </div>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    fetch('/api/user', { credentials: 'include' })
+      .then(response => {
+        if (!response.ok) {
+          window.location.href = '/login.html';
+          throw new Error('Não autenticado');
+        }
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById('user-greeting').textContent = `Bem-vindo, ${data.nome}`;
+      })
+      .catch(error => {
+        console.error('Erro ao carregar usuário:', error);
+        window.location.href = '/login.html';
+      });
+
+    function logout() {
+      fetch('/api/logout', { method: 'POST', credentials: 'include' })
+        .then(() => {
+          window.location.href = '/index.html';
+        })
+        .catch(error => {
+          console.error('Erro ao fazer logout:', error);
+        });
+    }
+  </script>
+</body>
+</html>

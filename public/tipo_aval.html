@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FOA Med - Gerenciamento de Tipos de Avaliação</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+</head>
+<body>
+  <header class="header">
+    <a href="/dashboard.html" class="btn btn-outline-light btn-back"><i class="fas fa-arrow-left"></i> Voltar</a>
+    <h1>FOA Med - Gerenciamento de Tipos de Avaliação</h1>
+    <div class="user-info">
+      <span id="user-greeting">Bem-vindo, Carregando...</span>
+      <button class="btn-logout btn btn-outline-light" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+    </div>
+  </header>
+
+  <!-- Mensagem de feedback -->
+  <div id="feedback" class="alert" style="display: none;"></div>
+
+  <!-- Formulário para criar/editar -->
+  <div class="container my-4">
+    <div class="card mb-4">
+      <div class="card-body">
+        <h2 class="h5">Adicionar/Editar Tipo</h2>
+        <form id="tipo-form">
+          <input type="hidden" id="id">
+          <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo:</label>
+            <input type="text" class="form-control" id="tipo" required placeholder="Digite o tipo de avaliação">
+          </div>
+          <button type="submit" class="btn btn-primary">Salvar</button>
+          <button type="button" class="btn btn-secondary" onclick="clearForm()">Limpar</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Lista de tipos -->
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h5">Lista de Tipos</h2>
+        <div class="mb-3">
+          <label for="search" class="form-label">Buscar:</label>
+          <input type="text" class="form-control" id="search" placeholder="Digite o tipo de avaliação...">
+        </div>
+        <div class="table-responsive">
+          <table class="table table-striped" id="tipo-table">
+            <thead>
+              <tr>
+                <th>Ações</th>
+                <th>ID</th>
+                <th>Tipo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tipo-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/tipoAval.js"></script>
+  <script>
+    // Verificar autenticação e carregar nome do usuário
+    fetch('/api/user', { credentials: 'include' })
+      .then(response => {
+        if (!response.ok) {
+          window.location.href = '/login.html';
+          throw new Error('Não autenticado');
+        }
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById('user-greeting').textContent = `Bem-vindo, ${data.nome}`;
+      })
+      .catch(error => {
+        console.error('Erro ao carregar usuário:', error);
+        window.location.href = '/login.html';
+      });
+
+    function logout() {
+      fetch('/api/logout', { method: 'POST', credentials: 'include' })
+        .then(() => {
+          window.location.href = '/index.html';
+        })
+        .catch(error => {
+          console.error('Erro ao fazer logout:', error);
+        });
+    }
+  </script>
+</body>
+</html>
