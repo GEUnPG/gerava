@@ -1,3 +1,4 @@
+//ALTERANDO O ARQUIVO PARA APARECER NO VSCODE
 const QRCode = require('qrcode');
 const { Client } = require('whatsapp-web.js');
 const pool = require('./src/database/db');
