@@ -1,11 +1,16 @@
 {
   "name": "foa_med_crud",
   "version": "1.0.0",
-  "description": "",
+  "description": "package para funcionamento do poku",
+  "type": "commonjs",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "test": "poku tests/**/*.test.js",
+    "test:unit": "poku tests/unit/*.test.js",
+    "test:integration": "poku tests/integration/*.test.js",
+    "test:e2e": "cross-env NODE_ENV=test POKU_LOG=1 poku ./tests/e2e/usuariosController.test.js",
+    "test:e2e:raw": "cross-env NODE_ENV=test node ./tests/e2e/usuariosController.test.js"
   },
   "keywords": [],
   "author": "",
@@ -23,5 +28,11 @@
     "qrcode-terminal": "^0.12.0",
     "whatsapp-web.js": "^1.33.2",
     "ws": "^8.18.2"
+  },
+  "devDependencies": {
+    "cli-progress": "^3.12.0",
+    "cross-env": "^10.0.0",
+    "poku": "^3.0.2",
+    "supertest": "^7.1.4"
   }
 }

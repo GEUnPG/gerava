@@ -20,15 +20,19 @@ const consultaRoutes = require('./src/routes/consultaRoutes');
 const arquivoRoutes = require('./src/routes/arquivoRoutes');
 const chatbotRoutes = require('./src/routes/chatbotRoutes');
 const avaliacaoRoutes = require('./src/routes/avaliacaoRoutes');
+// utilizar npm run test:e2e (para teste liso) ou npm run test:e2e:raw (para teste detalhado)
+//const app = require('./app'); // Usa o app do Express para realizar o teste, descomentar:REMOVER SE DER PROBLEMAS
 require('dotenv').config();
 
 console.log('=== Iniciando servidor ===');
 
+const app = express();
+
 try {
-  const app = express();
+  
   const server = http.createServer(app);
   const wss = new WebSocketServer({ server });
-  const PORT = process.env.PORT || 3000;
+  const PORT = process.env.PORT || 3000; //procura a porta no .env e se não achar utiliza a 3000
 
   app.set('trust proxy', 1);
 
@@ -40,6 +44,7 @@ try {
 
   app.use(bodyParser.json());
   app.use(express.static(path.join(__dirname, 'public')));
+
   app.use(
     session({
       store: new pgSession({
@@ -449,4 +454,5 @@ try {
 } catch (error) {
   console.error('❌ Erro ao iniciar o servidor:', error.message, error.stack);
 }
+
 
