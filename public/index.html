@@ -1,22 +1,130 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FOA Med - Sistema de Gestão e Chatbot</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="icon" type="image/x-icon" href="images/favicon.ico">
+  <meta charset="UTF-8"> <!-- [web:32] -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- [web:32] -->
+  <title>FOA Med - Sistema de Gestão e Chatbot</title> <!-- [web:32] -->
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"> <!-- [web:32] -->
+  <link rel="stylesheet" href="/css/style.css"> <!-- [web:32] -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"> <!-- [web:32] -->
+  <link rel="icon" type="image/x-icon" href="images/favicon.ico"> <!-- [web:32] -->
+
+  <style>
+    :root {
+      --bg: #ffffff;
+      --text: #212529;
+      --muted: #6c757d;
+      --card: #ffffff;
+      --border: #dee2e6;
+      --primary: #0d6efd;
+      --accent-success: #28a745;
+      --shadow: 0px 4px 12px rgba(0,0,0,0.12);
+    }
+    .theme-dark {
+      --bg: #0f1115;
+      --text: #e6e6e6;
+      --muted: #a1a1aa;
+      --card: #151821;
+      --border: #2a2f3a;
+      --primary: #4da3ff;
+      --accent-success: #30c173;
+      --shadow: 0px 6px 16px rgba(0,0,0,0.45);
+    }
+    /*.theme-light { }*/
+
+    html, body { background: var(--bg); color: var(--text); } /* [web:29] */
+
+    /* Header claro no tema claro */
+    .theme-light .header {
+      background: #ffffff;
+      color: #212529;
+      border-bottom: 1px solid var(--border);
+    } /* [web:26][web:32] */
+    .theme-light .header a.btn.btn-outline-light {
+      color: var(--primary);
+      border-color: var(--primary);
+    } /* [web:26] */
+    .theme-light .header a.btn.btn-outline-light:hover {
+      background-color: rgba(13,110,253,.08);
+    } /* [web:26] */
+
+    /* Header escuro no tema escuro */
+    .theme-dark .header {
+      background: linear-gradient(180deg, #0b0f1a 0%, #101522 100%);
+      color: #fff;
+      border-bottom: 1px solid var(--border);
+    } /* [web:32] */
+    .theme-dark .header a.btn.btn-outline-light {
+      color: #f8f9fa;
+      border-color: #f8f9fa;
+    } /* [web:32] */
+    .theme-dark .header a.btn.btn-outline-light:hover {
+      color: #0b0f1a;
+      background-color: #f8f9fa;
+    } /* [web:32] */
+
+    /* Footer permanece escuro para ambos (ajuste se quiser claro no tema claro) */
+    .footer {
+      background: #0b0f1a !important;
+      color: #eaeaea !important;
+    } /* [web:26] */
+
+    .lead, .text-muted { color: var(--muted) !important; } /* [web:26] */
+
+    .card {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    } /* [web:26] */
+
+    .btn-primary { background-color: var(--primary); border-color: var(--primary); } /* [web:26] */
+    .btn-outline-primary { color: var(--primary); border-color: var(--primary); } /* [web:26] */
+    .btn-success { background-color: var(--accent-success); border-color: var(--accent-success); } /* [web:26] */
+    .text-primary { color: var(--primary) !important; } /* [web:26] */
+
+    .feedback-btn {
+      position: fixed; bottom: 20px; right: 20px;
+      background-color: var(--accent-success); color: white;
+      border: none; border-radius: 50%; width: 55px; height: 55px; font-size: 22px;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.35); cursor: pointer; z-index: 1050;
+    } /* [web:26] */
+    .feedback-btn:hover { filter: brightness(1.05); } /* [web:26] */
+
+    .feedback-card {
+      position: fixed; bottom: 90px; right: -400px; width: 300px;
+      background: var(--card); color: var(--text);
+      border-radius: 10px; padding: 15px; opacity: 0;
+      box-shadow: var(--shadow); transition: all 0.6s ease; z-index: 1060;
+      border: 1px solid var(--border);
+    } /* [web:26] */
+    .feedback-card.show { right: 20px; opacity: 1; } /* [web:26] */
+
+    .footer a { color: #d7e3ff !important; } /* [web:26] */
+    .footer .text-muted { color: #b8bfd2 !important; } /* [web:26] */
+    hr, .border-light { border-color: var(--border) !important; } /* [web:26] */
+
+    .theme-switch .form-check-input { cursor: pointer; }
+    .theme-switch .form-check-label { user-select: none; }
+  </style>
 </head>
 <body>
-  <header class="header">
-    <h1>FOA Med</h1>
-    <nav>
+  <header class="header d-flex align-items-center justify-content-between px-3 py-2">
+    <h1 class="m-0">FOA Med</h1>
+    <nav class="d-flex align-items-center gap-3">
       <a href="/consulta.html" class="btn btn-outline-light me-2">Consultar Provas</a>
       <a href="/login.html" class="btn btn-primary">Acessar Sistema</a>
+      <div class="form-check form-switch theme-switch m-0 d-flex align-items-center">
+        <input class="form-check-input" type="checkbox" role="switch" id="themeSwitch" aria-label="Alternar tema escuro" />
+        <label class="form-check-label ms-2" for="themeSwitch">
+          <span class="d-none d-sm-inline">Tema</span>
+        </label>
+      </div>
     </nav>
   </header>
+
   <main class="container my-5">
     <section class="hero text-center mb-5">
       <h2 class="display-4 fw-bold">Bem-vindo ao FOA Med</h2>
@@ -26,40 +134,130 @@
         <a href="/consulta.html" class="btn btn-outline-primary btn-lg">Consultar Provas</a>
       </div>
     </section>
+
     <section class="features row g-4">
       <div class="col-md-6">
-        <div class="card shadow-sm p-4 animate__animated animate__fadeIn">
+        <div class="card shadow-sm p-4">
           <i class="fas fa-robot fa-3x mb-3 text-primary"></i>
           <h3 class="h5 fw-medium">Chatbot Inteligente</h3>
           <p>Envie notificações automáticas, consulte avaliações e interaja com alunos e técnicos via WhatsApp em tempo real.</p>
         </div>
       </div>
       <div class="col-md-6">
-        <div class="card shadow-sm p-4 animate__animated animate__fadeIn">
+        <div class="card shadow-sm p-4">
           <i class="fas fa-calendar-check fa-3x mb-3 text-primary"></i>
           <h3 class="h5 fw-medium">Gestão de Avaliações</h3>
           <p>Organize avaliações por módulo, disciplina ou data com um painel intuitivo e fácil de usar.</p>
         </div>
       </div>
       <div class="col-md-6">
-        <div class="card shadow-sm p-4 animate__animated animate__fadeIn">
+        <div class="card shadow-sm p-4">
           <i class="fas fa-search fa-3x mb-3 text-primary"></i>
           <h3 class="h5 fw-medium">Consulta Pública de Provas</h3>
           <p>Consulte provas disponíveis por módulo, data ou disciplina, sem necessidade de login.</p>
         </div>
       </div>
     </section>
+
     <section class="qrcode-section text-center my-5">
       <h2 class="h5 fw-medium mb-4">Converse com o Chatbot FOA Med</h2>
-      <div class="card shadow-sm p-4 d-inline-block animate__animated animate__fadeIn">
+      <div class="card shadow-sm p-4 d-inline-block">
         <img src="/images/qrcode_chatbot.png" alt="QR Code para Chatbot FOA Med" class="img-fluid" style="max-width: 200px;">
         <p class="mt-3 text-muted">Escaneie o QR Code com seu celular para falar diretamente com nosso chatbot no WhatsApp!</p>
       </div>
     </section>
   </main>
-  <footer class="text-center py-4 bg-light">
-    <p class="mb-0">© 2025 FOA Med. Todos os direitos reservados.</p>
+
+  <footer class="footer bg-dark text-light pt-4 mt-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-4 mb-3">
+          <h5 class="fw-bold">FOA Med</h5>
+          <p class="small text-muted">Sistema de gestão de avaliações e chatbot integrado ao WhatsApp, feito para facilitar a comunicação e organização acadêmica.</p>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h5 class="fw-bold">Links</h5>
+          <ul class="list-unstyled">
+            <li><a href="/login.html" class="text-decoration-none text-light"><i class="fas fa-sign-in-alt me-2"></i>Acessar Sistema</a></li>
+            <li><a href="/consulta.html" class="text-decoration-none text-light"><i class="fas fa-search me-2"></i>Consultar Provas</a></li>
+            <li><a href="https://forms.gle/seu-formulario" target="_blank" class="text-decoration-none text-light"><i class="fas fa-comment-dots me-2"></i>Feedback</a></li>
+          </ul>
+        </div>
+        <div class="col-md-4 mb-3">
+          <h5 class="fw-bold">Contato</h5>
+          <p class="small mb-1"><i class="fas fa-envelope me-2"></i>suporte@foamed.com</p>
+          <p class="small mb-1"><i class="fas fa-phone me-2"></i>(11) 99999-9999</p>
+          <div>
+            <a href="https://wa.me/24999999850" target="_blank" class="text-light me-3"><i class="fab fa-whatsapp fa-lg"></i></a>
+            <a href="https://www.facebook.com/UniFOA/" target="_blank" class="text-light me-3"><i class="fab fa-facebook fa-lg"></i></a>
+            <a href="https://br.linkedin.com/school/unifoaedu/" target="_blank" class="text-light me-3"><i class="fab fa-linkedin fa-lg"></i></a>
+            <a href="https://www.instagram.com/unifoa/" target="_blank" class="text-light me-3"><i class="fab fa-instagram fa-lg"></i></a>
+            <a href="https://www.youtube.com/@unifoavr" target="_blank" class="text-light"><i class="fab fa-youtube fa-lg"></i></a>
+          </div>
+        </div>
+      </div>
+      <hr class="border-light">
+      <div class="text-center small">© 2025 GEUnPG. Todos os direitos reservados.</div>
+    </div>
   </footer>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <button class="feedback-btn" onclick="toggleFeedback()">
+    <i class="fas fa-bullhorn"></i>
+  </button>
+
+  <div id="feedback-card" class="feedback-card">
+    <div class="d-flex align-items-start">
+      <div class="me-2"><i class="fas fa-bullhorn text-success fa-lg"></i></div>
+      <div>
+        <h6 class="fw-bold mb-1">Ajude-nos a melhorar!</h6>
+        <p class="mb-2 small text-muted">Responda o formulário e compartilhe com a gente sua opinião.</p>
+        <a href="https://forms.gle/seu-formulario" target="_blank" class="btn btn-success btn-sm">Responder</a>
+      </div>
+    </div>
+    <button class="btn-close position-absolute top-0 end-0 m-2" onclick="toggleFeedback()"></button>
+  </div>
+
+  <script>
+    function toggleFeedback() {
+      document.getElementById("feedback-card").classList.toggle("show");
+    } /* [web:32] */
+
+    (function initTheme() {
+      const storageKey = 'foamed-theme';
+      const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+      const prefersDark = mq && mq.matches;
+      const saved = localStorage.getItem(storageKey);
+      const initialTheme = saved || (prefersDark ? 'dark' : 'light');
+
+      document.documentElement.classList.add(initialTheme === 'dark' ? 'theme-dark' : 'theme-light');
+
+      function applyTheme(next) {
+        document.documentElement.classList.remove('theme-dark', 'theme-light');
+        document.documentElement.classList.add(next === 'dark' ? 'theme-dark' : 'theme-light');
+        localStorage.setItem(storageKey, next);
+        const sw = document.getElementById('themeSwitch');
+        if (sw) sw.checked = (next === 'dark');
+      } /* [web:12][web:14] */
+
+      window.toggleTheme = function() {
+        const current = document.documentElement.classList.contains('theme-dark') ? 'dark' : 'light';
+        applyTheme(current === 'dark' ? 'light' : 'dark');
+      }; /* [web:11] */
+
+      window.addEventListener('DOMContentLoaded', () => {
+        const sw = document.getElementById('themeSwitch');
+        if (sw) {
+          sw.checked = document.documentElement.classList.contains('theme-dark');
+          sw.addEventListener('change', () => applyTheme(sw.checked ? 'dark' : 'light'));
+        }
+      }); /* [web:32][web:11] */
+
+      if (!saved && mq && mq.addEventListener) {
+        mq.addEventListener('change', e => applyTheme(e.matches ? 'dark' : 'light'));
+      } /* [web:11] */
+    })();
+  </script> <!-- [web:11][web:12][web:29] -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> <!-- [web:32] -->
 </body>
 </html>
