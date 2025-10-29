@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 
 const poolConfig = {
-  connectionString: 'postgresql://foa_med_user:x4jiJoOKtzOlPXFdLH89YlyFshV0kKGt@dpg-d0nn8kqdbo4c73ccftig-a/foa_med',
+  connectionString: 'postgresql://foa_med_enka_user:gcmIOzBlzbMkmDWCd0KnbSDK74r0GY6k@dpg-d4123gs9c44c73cggpc0-a/foa_med_enka',
   ssl: { rejectUnauthorized: false }, // SSL fixo para o Render
   max: 10,
   idleTimeoutMillis: 10000,
