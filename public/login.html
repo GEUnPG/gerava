@@ -49,50 +49,12 @@
 
       loginButton.disabled = true;
 
-    //   try {
-    //     const response = await fetch('/api/login', {
-    //       method: 'POST',
-    //       headers: { 'Content-Type': 'application/json' },
-    //       body: JSON.stringify({ username, password }),
-    //       credentials: 'include'
-    //     });
-
-    //     const result = await response.json();
-    //     if (response.ok) {
-    //       window.location.href = '/dashboard.html';
-    //     } else {
-    //       if (result.blocked) {
-    //         if (result.permanent) {
-    //           showFeedback(
-    //             'Este dispositivo foi bloqueado permanentemente. Contate o administrador.',
-    //             'error'
-    //           );
-    //         } else {
-    //           const remainingSeconds = result.remainingSeconds;
-    //           showFeedback(
-    //             `Muitas tentativas. Tente novamente em ${Math.ceil(remainingSeconds / 60)} minutos.`,
-    //             'error'
-    //           );
-    //           startBlockTimer(remainingSeconds);
-    //         }
-    //       } else {
-    //         showFeedback(result.error || 'Erro ao fazer login.', 'error');
-    //       }
-    //     }
-    //   } catch (error) {
-    //     console.error('Erro ao fazer login:', error);
-    //     showFeedback('Erro ao fazer login: ' + error.message, 'error');
-    //   } finally {
-    //     if (!blockTimer && !result?.blocked) {
-    //       loginButton.disabled = false;
-    //     }
-    //   }
-    // });
-
     try { //remover se der ruim
   const response = await fetch('/api/login', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({ username, password }),
     credentials: 'include'
   });
