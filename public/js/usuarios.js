@@ -4,6 +4,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchInput = document.getElementById('search');
   const feedback = document.getElementById('feedback');
 
+  //atualiza requisições de segurança de senha
+  const passwordInput = document.getElementById('password');
+  const reqLength = document.getElementById('req-length');
+  const reqUpper = document.getElementById('req-upper');
+  const reqLower = document.getElementById('req-lower');
+  const reqNumber = document.getElementById('req-number');
+  const reqSymbol = document.getElementById('req-symbol');
+
+  passwordInput.addEventListener('input', () => {
+    const value = passwordInput.value;
+
+    // Checa cada requisito e atualiza a cor
+    reqLength.className = value.length >= 12 ? 'text-success' : 'text-danger';
+    reqUpper.className = /[A-Z]/.test(value) ? 'text-success' : 'text-danger';
+    reqLower.className = /[a-z]/.test(value) ? 'text-success' : 'text-danger';
+    reqNumber.className = /\d/.test(value) ? 'text-success' : 'text-danger';
+    reqSymbol.className = /[@$!%*?&]/.test(value) ? 'text-success' : 'text-danger';
+  });
+
+  //passwordInput = document.getElementById('password');
+  const togglePassword = document.getElementById('togglePassword');
+  const eyeIcon = document.getElementById('eyeIcon');
+
+  togglePassword.addEventListener('click', () => {
+  const isHidden = passwordInput.type === 'password';
+  passwordInput.type = isHidden ? 'text' : 'password';
+  eyeIcon.className = isHidden ? 'fa fa-eye' : 'fa fa-eye-slash';
+  });
+
   // Carregar usuários
   async function loadUsuarios() {
     try {
@@ -66,6 +95,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const nome = document.getElementById('nome').value.trim();
     const username = document.getElementById('username').value.trim();
     const password = document.getElementById('password').value;
+
+    // Validação de senha forte
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$/;
+    if (!passwordRegex.test(password)) {
+      showFeedback('A senha deve ter no mínimo 12 caracteres, incluindo letra maiúscula, minúscula, número e símbolo.', 'danger');
+      return;
+    }
 
     const usuario = { nome, username, password };
     const method = id ? 'PUT' : 'POST';
