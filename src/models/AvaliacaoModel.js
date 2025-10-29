@@ -1,4 +1,4 @@
-//arrumando
+// src/models/AvaliacaoModel.js  rumando
 const pool = require('../database/db');
 
 class Avaliacao {
@@ -194,32 +194,48 @@ static async findAll() {
   }
 }
 
-  // // Read (Listar todas)
-  // static async findAll() {
-  //   const result = await pool.query(`
-  //     SELECT a.*, m.nome AS modulo_nome, d.descricao AS disciplina_nome, p.nome AS professor_nome, s.situacao AS situacao_nome, t.tipo AS tipo_nome
-  //     FROM avaliacao a
-  //     LEFT JOIN modulo m ON a.modulo_id = m.id
-  //     LEFT JOIN disciplina d ON a.disciplina_id = d.id
-  //     LEFT JOIN professor p ON a.professor_id = p.id
-  //     LEFT JOIN situacao_aval s ON a.situacao = s.situacao
-  //     LEFT JOIN tipo_aval t ON a.tipo = t.tipo
-  //     ORDER BY a.data ASC, a.horario_ini ASC
-  //   `);
-  //   const avaliacoes = result.rows;
+// buscar todas paginadas
+static async findAllPaginated({ offset, limit, search }) {
+  let whereClause = 'WHERE a.delete_logico = FALSE';
+  let params = [];
+  if (search) {
+    whereClause += ` AND (a.data::text ILIKE $1 OR m.nome ILIKE $1 OR p.nome ILIKE $1 OR a.horario_ini::text ILIKE $1)`;
+    params.push(`%${search}%`);
+  }
+  params.push(limit, offset);
 
-  //   for (let avaliacao of avaliacoes) {
-  //     const labsResult = await pool.query(
-  //       `SELECT lc.id, lc.nome, lc.qtd_com_total, lc.qtd_sem_total
-  //        FROM laboratorio_conjuntos lc
-  //        JOIN avaliacao_laboratorio al ON lc.id = al.conjunto_id
-  //        WHERE al.avaliacao_id = $1`,
-  //       [avaliacao.id]
-  //     );
-  //     avaliacao.laboratorios = labsResult.rows;
-  //   }
-  //   return avaliacoes;
-  // }
+  const listQuery = `
+    SELECT a.*, m.nome AS modulo_nome, d.descricao AS disciplina_nome, p.nome AS professor_nome, s.situacao AS situacao_nome, t.tipo AS tipo_nome
+    FROM avaliacao a
+    LEFT JOIN modulo m ON a.modulo_id = m.id
+    LEFT JOIN disciplina d ON a.disciplina_id = d.id
+    LEFT JOIN professor p ON a.professor_id = p.id
+    LEFT JOIN situacao_aval s ON a.situacao = s.situacao
+    LEFT JOIN tipo_aval t ON a.tipo = t.tipo
+    ${whereClause}
+    ORDER BY a.data ASC, a.horario_ini ASC
+    LIMIT $${params.length - 1} OFFSET $${params.length}
+  `;
+  const countQuery = `SELECT COUNT(*) AS total FROM avaliacao a LEFT JOIN modulo m ON a.modulo_id = m.id LEFT JOIN professor p ON a.professor_id = p.id ${whereClause}`;
+  
+  // Executando as queries
+  const listResult = await pool.query(listQuery, params);
+  const countResult = await pool.query(countQuery, search ? [params[0]] : []);
+  const avaliacoes = listResult.rows;
+  const total = parseInt(countResult.rows[0].total);
+
+  // Opcional: carregar laboratórios das avaliações (pelo id)
+  for (let avaliacao of avaliacoes) {
+    const labsResult = await pool.query(
+      `SELECT lc.id, lc.nome FROM laboratorio_conjuntos lc JOIN avaliacao_laboratorio al ON lc.id = al.conjunto_id WHERE al.avaliacao_id = $1`,
+      [avaliacao.id]
+    );
+    avaliacao.laboratorios = labsResult.rows;
+  }
+
+  return { avaliacoes, total };
+}
+
 
   // Read (Buscar por ID)
   static async findById(id) {
