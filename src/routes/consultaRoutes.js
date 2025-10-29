@@ -5,12 +5,12 @@ const ConsultaController = require('../controllers/ConsultaController');
 
 console.log('✅ Carregando src/routes/consultaRoutes.js');
 
-// Rota pública para listar avaliações
-router.get('/public', (req, res, next) => {
-  console.log('📩 Acessando GET /api/avaliacoes/public');
-  ConsultaController.listPublic(req, res, next);
-});
+// rota pública com paginação
+router.get('/public', ConsultaController.listPublic);
+
+// rota pública sem paginação (pesquisa avançada)
+router.get('/public-all', ConsultaController.listAll);
 
 console.log('✅ Rotas definidas em consultaRoutes');
 
-module.exports = router; //
+module.exports = router;
