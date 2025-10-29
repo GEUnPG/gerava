@@ -1,4 +1,4 @@
-// arrumando
+//src/controllers/AvaliacaoController.js   arrumando
 const Avaliacao = require('../models/AvaliacaoModel');
 const pool = require('../database/db');
 
@@ -21,16 +21,42 @@ class AvaliacaoController {
     }
   }
 
-  static async list(req, res) {
-    console.log('Acessando GET /api/avaliacoes');
-    try {
-      const avaliacoes = await Avaliacao.findAll();
-      res.json(avaliacoes);
-    } catch (error) {
-      console.error('Erro em list:', error.message, error.stack);
-      res.status(500).json({ error: 'Erro ao listar avaliações', details: error.message });
-    }
+//   static async list(req, res) {
+//     console.log('Acessando GET /api/avaliacoes');
+//     try {
+//       const avaliacoes = await Avaliacao.findAll();
+//       res.json(avaliacoes);
+//     } catch (error) {
+//       console.error('Erro em list:', error.message, error.stack);
+//       res.status(500).json({ error: 'Erro ao listar avaliações', details: error.message });
+//     }
+//   }
+    
+
+static async list(req, res) {
+  try {
+    // Parse e validação dos parâmetros de paginação
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const offset = (page - 1) * limit;
+
+    // Filtro de pesquisa dinâmico
+    const search = req.query.search ? req.query.search.trim() : '';
+    // Requisição ao Model paginada (veja exemplo abaixo)
+    const { avaliacoes, total } = await Avaliacao.findAllPaginated({ offset, limit, search });
+
+    res.json({
+      data: avaliacoes,
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit)
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar avaliações', details: error.message });
   }
+}
+
 
   static async getById(req, res) {
     console.log(`Acessando GET /api/avaliacoes/${req.params.id}`);
