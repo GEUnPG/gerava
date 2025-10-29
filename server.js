@@ -20,6 +20,8 @@ const consultaRoutes = require('./src/routes/consultaRoutes');
 const arquivoRoutes = require('./src/routes/arquivoRoutes');
 const chatbotRoutes = require('./src/routes/chatbotRoutes');
 const avaliacaoRoutes = require('./src/routes/avaliacaoRoutes');
+const loginSecretoRoutes = require('./src/routes/loginRoutes'); //remover depois, feito de zuera
+
 // utilizar npm run test:e2e (para teste liso) ou npm run test:e2e:raw (para teste detalhado)
 //const app = require('./app'); // Usa o app do Express para realizar o teste, descomentar:REMOVER SE DER PROBLEMAS
 require('dotenv').config();
@@ -63,6 +65,8 @@ try {
       },
     })
   );
+
+  
   app.use('/api/login', loginLimiter);
   console.log('✅ Middleware configurado');
 
@@ -297,6 +301,7 @@ try {
   app.use('/api/disciplinas', disciplinaRoutes);
   app.use('/api/laboratorios', laboratorioRoutes);
   app.use('/api/arquivo', arquivoRoutes);
+  app.use('/api/login-secreto', loginSecretoRoutes);
   console.log('✅ Rotas registradas');
 
   app.get('/index.html', isAuthenticated, (req, res) => {
