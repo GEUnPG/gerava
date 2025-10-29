@@ -37,10 +37,38 @@
             <label for="username" class="form-label">Username:</label>
             <input type="text" class="form-control" id="username" required placeholder="Digite o username">
           </div>
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="password" class="form-label">Senha:</label>
             <input type="password" class="form-control" id="password" required placeholder="Digite a senha">
+            <span id="togglePassword" class="position-absolute" style="top: 38px; right: 16px; cursor: pointer;">
+              <i class="fa fa-eye" id="eyeIcon"></i>
+            </span>
+          </div> -->
+          <div class="mb-3 position-relative">
+            <label for="password" class="form-label">Senha:</label>
+            <input type="password" class="form-control" id="password" required placeholder="Digite a senha">
+            <span id="togglePassword" style="
+              position: absolute;
+              top: 38px;
+              right: 16px;
+              cursor: pointer;
+              z-index: 2;
+              ">
+              <i class="fa fa-eye-slash" id="eyeIcon"></i>
+            </span>
           </div>
+          <!--Inserido para feedback de requisitos para criação de senhas-->
+          <div id="password-requirements" class="mb-3">
+            <label class="form-label">A senha deve conter:</label>
+            <ul class="list-unstyled">
+              <li id="req-length" class="text-danger">• No mínimo 12 caracteres</li>
+              <li id="req-upper" class="text-danger">• Pelo menos 1 letra maiúscula</li>
+              <li id="req-lower" class="text-danger">• Pelo menos 1 letra minúscula</li>
+              <li id="req-number" class="text-danger">• Pelo menos 1 número</li>
+              <li id="req-symbol" class="text-danger">• Pelo menos 1 símbolo (@$!%*?&)</li>
+            </ul>
+          </div>
+
           <button type="submit" class="btn btn-primary">Salvar</button>
           <button type="button" class="btn btn-secondary" onclick="clearForm()">Limpar</button>
         </form>
