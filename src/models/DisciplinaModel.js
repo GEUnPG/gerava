@@ -72,11 +72,6 @@ class DisciplinaModel {
   }
 }
 
-  // static async getModulos() {
-  //   const result = await pool.query('SELECT id, nome FROM modulo ORDER BY nome');
-  //   return result.rows;
-  // }
-
 
   static async getProfessores() {
   try {
@@ -89,11 +84,7 @@ class DisciplinaModel {
     throw error;
   }
 }
-
-  // static async getProfessores() {
-  //   const result = await pool.query('SELECT id, nome FROM professor ORDER BY nome');
-  //   return result.rows;
-  // }
+  
 }
 
 module.exports = DisciplinaModel;
