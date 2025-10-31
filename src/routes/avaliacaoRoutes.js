@@ -63,11 +63,6 @@ router.put('/:id', isAuthenticated, (req, res, next) => {
   AvaliacaoController.update(req, res, next);
 });
 
-// router.delete('/:id', isAuthenticated, (req, res, next) => {
-//   console.log(`📩 Acessando DELETE /api/avaliacoes/${req.params.id}`);
-//   AvaliacaoController.delete(req, res, next);
-// });
-
 router.patch('/:id/visivel', isAuthenticated, (req, res, next) => {
   console.log(`📩 Acessando PATCH /api/avaliacoes/${req.params.id}/visivel`, req.body);
   AvaliacaoController.updateVisivel(req, res, next);
