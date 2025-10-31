@@ -86,16 +86,7 @@ static async getProfessores(req, res) {
   }
 }
 
-  // static async getModulos(req, res) {
-  //   try {
-  //     const modulos = await DisciplinaModel.getModulos();
-  //     res.json(modulos);
-  //   } catch (error) {
-  //     res.status(500).json({ error: 'Erro ao buscar módulos', details: error.message });
-  //   }
-  // }
-
-
+  
   static async getProfessores(req, res) {
   console.log('Acessando GET /api/disciplinas/professores');
   try {
@@ -108,14 +99,6 @@ static async getProfessores(req, res) {
   }
 }
 
-  // static async getProfessores(req, res) {
-  //   try {
-  //     const professores = await DisciplinaModel.getProfessores();
-  //     res.json(professores);
-  //   } catch (error) {
-  //     res.status(500).json({ error: 'Erro ao buscar professores', details: error.message });
-  //   }
-  // }
 }
 
 module.exports = DisciplinaController;
