@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const path = require('path');
+const path = require('node:path');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
@@ -8,7 +8,7 @@ const pool = require('./src/database/db');
 const { startChatbot, registerWebSocket } = require('./chatbot');
 const rateLimit = require('express-rate-limit');
 const { WebSocketServer } = require('ws');
-const http = require('http');
+const http = require('node:http');
 const professorRoutes = require('./src/routes/professorRoutes'); 
 const usuariosRoutes = require('./src/routes/usuariosRoutes'); 
 const situacaoAvalRoutes = require('./src/routes/situacaoAvalRoutes'); 
