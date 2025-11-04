@@ -1,3 +1,4 @@
+//refatorado em 2024-06-10
 // src/models/AvaliacaoModel.js  rumando
 const pool = require('../database/db');
 
@@ -222,7 +223,7 @@ static async findAllPaginated({ offset, limit, search }) {
   const listResult = await pool.query(listQuery, params);
   const countResult = await pool.query(countQuery, search ? [params[0]] : []);
   const avaliacoes = listResult.rows;
-  const total = parseInt(countResult.rows[0].total);
+  const total = Number.parseInt(countResult.rows[0].total);
 
   // Opcional: carregar laboratórios das avaliações (pelo id)
   for (let avaliacao of avaliacoes) {
