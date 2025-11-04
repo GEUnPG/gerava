@@ -1,11 +1,12 @@
-// services/messageQueue.js
+// chatbot/services/messageQueue.js
 class MessageQueue {
   constructor() {
     this.jobs = [];
     this.isProcessing = false;
   }
 
-  add(job, options = {}) {
+  // ✅ SOLUÇÃO 1: Tornar método async (mais simples)
+  async add(job, options = {}) {
     this.jobs.push({ ...job, delay: options.delay || 0 });
     if (!this.isProcessing) {
       this.process();
