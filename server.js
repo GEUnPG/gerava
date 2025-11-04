@@ -1,3 +1,5 @@
+//refatorada 2025-11-04
+//server.js
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('node:path');
@@ -5,7 +7,7 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session);
 const pool = require('./src/database/db');
-const { startChatbot, registerWebSocket } = require('./chatbot');
+const { startChatbot, registerWebSocket } = require('./chatbot/chatbot');
 const rateLimit = require('express-rate-limit');
 const { WebSocketServer } = require('ws');
 const http = require('node:http');
@@ -45,9 +47,9 @@ function getClientIp(req) {
 
 async function sendAdminNotification(ip) {
   try {
-    const { sendMessage } = require('./chatbot');
+    const { sendMessage } = require('./chatbot/chatbot');
     await sendMessage(
-      '5524999042169@c.us',
+      '5524999999850@c.us',
       `🚨 IP ${ip} foi bloqueado permanentemente devido a múltiplas tentativas inválidas. Verifique em http://localhost:3000/admin.html.`
     );
     console.log(`Notificação enviada ao administrador para IP ${ip}`);
