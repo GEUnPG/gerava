@@ -29,51 +29,68 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     ws.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-      switch (data.type) {
-        case 'qr':
-          qrCodeImage.src = data.data;
-          qrCodeContainer.style.display = 'block';
-          updateChatbotStatus('Escaneie o QR code para conectar o chatbot.');
-          showToast('QR code gerado. Escaneie para conectar.', 'success');
-          break;
-        case 'connected':
-          qrCodeContainer.style.display = 'none';
-          updateChatbotStatus(data.message);
-          isChatbotConnected = true;
-          updateStartButton();
-          showToast(data.message, 'success');
-          loadStatus();
-          break;
-        case 'disconnected':
-          qrCodeContainer.style.display = 'none';
-          updateChatbotStatus(data.message);
-          isChatbotConnected = false;
-          updateStartButton();
-          showToast(data.message, 'error');
-          loadStatus();
-          break;
-        case 'status':
-          updateChatbotStatus(data.message);
-          isChatbotConnected = data.connected;
-          updateStartButton();
-          if (data.connected) {
-            qrCodeContainer.style.display = 'none';
-          } else {
-            qrCodeContainer.style.display = 'none';
-          }
-          loadStatus();
-          break;
-        case 'error':
-          updateChatbotStatus(`Erro: ${data.message}`);
-          qrCodeContainer.style.display = 'none';
-          showToast(`Erro: ${data.message}`, 'error');
-          break;
-        default:
-          console.warn('Tipo de mensagem desconhecido:', data.type);
-          break;
-      }
-    };
+  try {
+    const data = JSON.parse(event.data);
+    handleWebSocketMessage(data);
+  } catch (error) {
+    console.error('Erro ao processar mensagem WebSocket:', error);
+    showToast('Erro ao processar mensagem do servidor.', 'error');
+  }
+};
+
+// Função auxiliar para lidar com mensagens WebSocket
+function handleWebSocketMessage(data) {
+  // Ações comuns para múltiplos casos
+  const hideQrCode = () => {
+    qrCodeContainer.style.display = 'none';
+  };
+
+  const updateConnectionState = (connected) => {
+    isChatbotConnected = connected;
+    updateStartButton();
+    loadStatus();
+  };
+
+  switch (data.type) {
+    case 'qr':
+      qrCodeImage.src = data.data;
+      qrCodeContainer.style.display = 'block';
+      updateChatbotStatus('Escaneie o QR code para conectar o chatbot.');
+      showToast('QR code gerado. Escaneie para conectar.', 'success');
+      break;
+
+    case 'connected':
+      hideQrCode();
+      updateChatbotStatus(data.message);
+      updateConnectionState(true);
+      showToast(data.message, 'success');
+      break;
+
+    case 'disconnected':
+      hideQrCode();
+      updateChatbotStatus(data.message);
+      updateConnectionState(false);
+      showToast(data.message, 'error');
+      break;
+
+    case 'status':
+      hideQrCode(); // Sempre esconde o QR code no status (corrigido a lógica redundante)
+      updateChatbotStatus(data.message);
+      updateConnectionState(data.connected);
+      break;
+
+    case 'error':
+      hideQrCode();
+      updateChatbotStatus(`Erro: ${data.message}`);
+      showToast(`Erro: ${data.message}`, 'error');
+      break;
+
+    default:
+      console.warn('Tipo de mensagem WebSocket desconhecido:', data.type);
+      break;
+  }
+}
+
 
 
     ws.onclose = () => {
