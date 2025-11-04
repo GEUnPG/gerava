@@ -8,11 +8,12 @@ function isValidDate(dateStr) {
 }
 
 function isValidNumber(value) {
-  const num = parseInt(value);
-  return !isNaN(num) && num > 0;
+  const num = Number.parseInt(value);
+  return !Number.isNaN(num) && num > 0;
 }
 
 module.exports = {
   isValidDate,
   isValidNumber,
 };
+
