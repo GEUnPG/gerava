@@ -34,7 +34,7 @@ class LaboratorioController {
     console.log(`Acessando GET /api/laboratorios/${req.params.id}`);
     try {
       const id = Number.parseInt(req.params.id);
-      if (isNaN(id) || id <= 0) {
+      if (Number.isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
       const laboratorio = await Laboratorio.findById(id);
@@ -53,7 +53,7 @@ class LaboratorioController {
     console.log(`Acessando PUT /api/laboratorios/${req.params.id}`, req.body);
     try {
       const id = Number.parseInt(req.params.id);
-      if (isNaN(id) || id <= 0) {
+      if (Number.isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
       const { nome, qtd_com_total, qtd_sem_total } = req.body;
@@ -76,7 +76,7 @@ class LaboratorioController {
     console.log(`Acessando DELETE /api/laboratorios/${req.params.id}`);
     try {
       const id = Number.parseInt(req.params.id);
-      if (isNaN(id) || id <= 0) {
+      if (Number.isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
       await Laboratorio.delete(id);

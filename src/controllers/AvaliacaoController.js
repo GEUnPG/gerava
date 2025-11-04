@@ -51,7 +51,7 @@ static async list(req, res) {
     console.log(`Acessando GET /api/avaliacoes/${req.params.id}`);
     try {
       const id = Number.parseInt(req.params.id);
-      if (isNaN(id) || id <= 0) {
+      if (Number.isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
       const avaliacao = await Avaliacao.findById(id);
@@ -70,7 +70,7 @@ static async list(req, res) {
     console.log(`Acessando PUT /api/avaliacoes/${req.params.id}`);
     try {
       const id = Number.parseInt(req.params.id);
-      if (isNaN(id) || id <= 0) {
+      if (Number.isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
       const data = req.body;
@@ -89,7 +89,7 @@ static async list(req, res) {
     console.log(`Acessando DELETE /api/avaliacoes/${req.params.id}`);
     try {
       const id = Number.parseInt(req.params.id);
-      if (isNaN(id) || id <= 0) {
+      if (Number.isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
       await Avaliacao.delete(id);
@@ -105,7 +105,7 @@ static async list(req, res) {
     try {
       const id = Number.parseInt(req.params.id);
       const { visivel } = req.body;
-      if (isNaN(id) || id <= 0) {
+      if (Number.isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
       if (typeof visivel !== 'boolean') {
@@ -124,7 +124,7 @@ static async list(req, res) {
     try {
       const id = Number.parseInt(req.params.id);
       const { delete_logico } = req.body;
-      if (isNaN(id) || id <= 0) {
+      if (Number.isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
       if (typeof delete_logico !== 'boolean') {
@@ -192,7 +192,7 @@ static async list(req, res) {
         return res.status(400).json({ error: 'Campos data, horario_ini, horario_fim e qtd_alunos são obrigatórios' });
       }
       const qtdAlunosInt = Number.parseInt(qtd_alunos);
-      if (isNaN(qtdAlunosInt) || qtdAlunosInt <= 0) {
+      if (Number.isNaN(qtdAlunosInt) || qtdAlunosInt <= 0) {
         return res.status(400).json({ error: 'qtd_alunos deve ser um número positivo' });
       }
       if (!/^\d{4}-\d{2}-\d{2}$/.test(data)) {
