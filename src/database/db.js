@@ -1,4 +1,4 @@
-//refatorado 2024-06-10
+//refatorado 2025-06-10
 // db.js utilizado para executar no render
 const { Pool } = require('pg');
 require('dotenv').config(); // garantir que o .env seja lido em ambiente local
@@ -19,8 +19,8 @@ console.log('✅ Pool configurado com connectionString do ambiente.');
 
 const pool = new Pool(poolConfig);
 
-// ✅ REFATORADO: Usar async/await ao invés de promise chain
-async function initializePool() {
+// ✅ SOLUÇÃO: IIFE async para permitir await
+(async () => {
   try {
     const client = await pool.connect();
     console.log('✅ Conexão com PostgreSQL estabelecida com sucesso.');
@@ -28,9 +28,6 @@ async function initializePool() {
   } catch (err) {
     console.error('❌ Erro ao conectar ao banco de dados:', err.message);
   }
-}
-
-// Chamar a função de inicialização
-initializePool();
+})();
 
 module.exports = pool;
