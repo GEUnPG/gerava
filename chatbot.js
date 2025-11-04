@@ -19,7 +19,7 @@ const messageQueue = {
     process: async () => {
         if (messageQueue.isProcessing) return;
         // Se não estiver conectado, não iniciar processamento (mantém filas para depois)
-        if (!global.chatbotStatus.connected) {
+        if (!globalThis.chatbotStatus.connected) {
             console.log('messageQueue: cliente não conectado, aguardando conexão para processar a fila.');
             return;
         }
@@ -32,14 +32,14 @@ const messageQueue = {
             try {
                 if (!client) throw new Error('Cliente WhatsApp não inicializado.');
                 await client.sendMessage(job.chatId, job.message);
-                global.chatbotStatus.messagesSentToday++;
-                if (global.chatbotStatus.messagesSentToday % 100 === 0) {
+                globalThis.chatbotStatus.messagesSentToday++;
+                if (globalThis.chatbotStatus.messagesSentToday % 100 === 0) {
                     await updateStatus();
                 }
             } catch (error) {
                 console.error(`Erro ao enviar mensagem para ${job.chatId}:`, error.message);
                 // Em caso de falha por desconexão, re-enfileirar e sair para evitar desgaste
-                if (!global.chatbotStatus.connected) {
+                if (!globalThis.chatbotStatus.connected) {
                     // re-enfileira o job no início
                     messageQueue.jobs.unshift(job);
                     break;
@@ -59,10 +59,10 @@ const groupMapping = {
 const TECHNICIANS_GROUP = '120363401603739472@g.us';
 
 // Cache e status
-global.modulos = [];
-global.professores = [];
+globalThis.modulos = [];
+globalThis.professores = [];
 let lastCacheUpdate = 0;
-global.chatbotStatus = { connected: false, messagesSentToday: 0, messagesReceivedToday: 0 };
+globalThis.chatbotStatus = { connected: false, messagesSentToday: 0, messagesReceivedToday: 0 };
 
 // Cache de configurações
 let configCache = {
@@ -119,7 +119,7 @@ async function updateStatus() {
         await pool.query(
             `INSERT INTO chatbot_config (setting, value) VALUES ($1, $2)
              ON CONFLICT (setting) DO UPDATE SET value = $2, updated_at = CURRENT_TIMESTAMP`,
-            ['messages_received_today', global.chatbotStatus.messagesReceivedToday.toString()]
+            ['messages_received_today', globalThis.chatbotStatus.messagesReceivedToday.toString()]
         );
     } catch (error) {
         console.error('Erro ao atualizar status:', error.message);
@@ -132,8 +132,8 @@ async function updateCache() {
     try {
         const modulosResult = await pool.query('SELECT id, nome FROM modulo');
         const professoresResult = await pool.query('SELECT id, nome FROM professor');
-        global.modulos = modulosResult.rows;
-        global.professores = professoresResult.rows;
+        globalThis.modulos = modulosResult.rows;
+        globalThis.professores = professoresResult.rows;
         lastCacheUpdate = now;
         console.log('Cache atualizado: módulos e professores.');
     } catch (error) {
@@ -208,7 +208,7 @@ async function manageSubscription(phoneNumber, subscribe) {
 let client = null;
 
 function initializeChatbot() {
-    if (client && global.chatbotStatus.connected) {
+    if (client && globalThis.chatbotStatus.connected) {
         return { client, alreadyConnected: true };
     }
 
@@ -241,7 +241,7 @@ function initializeChatbot() {
 
     client.on('auth_failure', msg => {
         console.error('Falha de autenticação do WhatsApp:', msg);
-        global.chatbotStatus.connected = false;
+        globalThis.chatbotStatus.connected = false;
         wsClients.forEach(ws => {
             if (ws.isOpen) ws.send(JSON.stringify({ type: 'error', message: 'Falha de autenticação. Refaça o login via QR.' }));
         });
@@ -251,7 +251,7 @@ function initializeChatbot() {
     client.on('ready', async () => {
         try {
             console.log('Tudo certo! WhatsApp conectado.');
-            global.chatbotStatus.connected = true;
+            globalThis.chatbotStatus.connected = true;
             await updateStatus();
             await updateCache();
             await getConfig(); // Inicializa o cache de configurações
@@ -278,7 +278,7 @@ function initializeChatbot() {
     // Desconexão
     client.on('disconnected', async reason => {
         console.log('Cliente desconectado:', reason);
-        global.chatbotStatus.connected = false;
+        globalThis.chatbotStatus.connected = false;
         await updateStatus();
         client = null;
         wsClients.forEach(ws => {
@@ -292,8 +292,8 @@ function initializeChatbot() {
     client.on('message', async msg => {
         if (!msg.from.endsWith('@c.us')) return;
 
-        global.chatbotStatus.messagesReceivedToday++;
-        if (global.chatbotStatus.messagesReceivedToday % 100 === 0) {
+        globalThis.chatbotStatus.messagesReceivedToday++;
+        if (globalThis.chatbotStatus.messagesReceivedToday % 100 === 0) {
             await updateStatus();
         }
 
@@ -361,13 +361,13 @@ function initializeChatbot() {
                         case '1':
                             try {
                                 await updateCache();
-                                if (global.modulos.length === 0) {
+                                if (globalThis.modulos.length === 0) {
                                     await messageQueue.add({ chatId: msg.from, message: 'Nenhum módulo encontrado. Tente novamente mais tarde ou digite "menu" para voltar.' });
                                     userState.state = 'IDLE';
                                     return;
                                 }
                                 let response = 'Escolha um módulo (digite o número):\n\n';
-                                global.modulos.forEach(mod => {
+                                globalThis.modulos.forEach(mod => {
                                     response += `${mod.id} - ${mod.nome}\n`;
                                 });
                                 await messageQueue.add({ chatId: msg.from, message: response });
@@ -392,13 +392,13 @@ function initializeChatbot() {
                         case '4':
                             try {
                                 await updateCache();
-                                if (global.professores.length === 0) {
+                                if (globalThis.professores.length === 0) {
                                     await messageQueue.add({ chatId: msg.from, message: 'Nenhum professor encontrado. Tente novamente mais tarde ou digite "menu" para voltar.' });
                                     userState.state = 'IDLE';
                                     return;
                                 }
                                 let response = 'Escolha um professor (digite o número):\n\n';
-                                global.professores.forEach(prof => {
+                                globalThis.professores.forEach(prof => {
                                     response += `${prof.id} - ${prof.nome}\n`;
                                 });
                                 await messageQueue.add({ chatId: msg.from, message: response });
@@ -623,7 +623,7 @@ async function showMainMenu(msg, name) {
 }
 
 async function sendBroadcastMessage(message, groupIds = []) {
-    if (!global.chatbotStatus.connected) {
+    if (!globalThis.chatbotStatus.connected) {
         throw new Error('Chatbot não está conectado ao WhatsApp.');
     }
 
@@ -655,7 +655,7 @@ async function sendBroadcastMessage(message, groupIds = []) {
 }
 
 async function sendMessage(chatId, message) {
-    if (!global.chatbotStatus.connected) {
+    if (!globalThis.chatbotStatus.connected) {
         throw new Error('Chatbot não está conectado ao WhatsApp.');
     }
     const autoRepliesEnabled = await getConfig('auto_replies_enabled');
@@ -678,8 +678,8 @@ function registerWebSocket(ws) {
     });
     ws.send(JSON.stringify({
         type: 'status',
-        connected: global.chatbotStatus.connected,
-        message: global.chatbotStatus.connected ? 'Chatbot já conectado.' : 'Chatbot desconectado. Inicie para gerar QR code.'
+        connected: globalThis.chatbotStatus.connected,
+        message: globalThis.chatbotStatus.connected ? 'Chatbot já conectado.' : 'Chatbot desconectado. Inicie para gerar QR code.'
     }));
 }
 
@@ -709,10 +709,10 @@ async function reloadConfig() {
 async function stopChatbot() {
     console.log('Parando o chatbot...');
     try {
-        if (client && global.chatbotStatus.connected) {
+        if (client && globalThis.chatbotStatus.connected) {
             await client.destroy();
             client = null;
-            global.chatbotStatus.connected = false;
+            globalThis.chatbotStatus.connected = false;
             await updateStatus();
 
             // limpa timers
@@ -747,3 +747,4 @@ module.exports = {
     reloadConfig,
     stopChatbot
 };
+
