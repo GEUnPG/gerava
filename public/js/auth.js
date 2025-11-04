@@ -1,7 +1,7 @@
 fetch('/api/user', { credentials: 'include' })
       .then(response => {
         if (!response.ok) {
-          window.location.href = '/login.html';
+          globalThis.location.href = '/login.html';
           throw new Error('Não autenticado');
         }
         return response.json();
@@ -11,13 +11,13 @@ fetch('/api/user', { credentials: 'include' })
       })
       .catch(error => {
         console.error('Erro ao carregar usuário:', error);
-        window.location.href = '/login.html';
+        globalThis.location.href = '/login.html';
       });
 
     function logout() {
       fetch('/api/logout', { method: 'POST', credentials: 'include' })
         .then(() => {
-          window.location.href = '/index.html';
+          globalThis.location.href = '/index.html';
         })
         .catch(error => {
           console.error('Erro ao fazer logout:', error);
