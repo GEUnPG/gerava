@@ -1,3 +1,4 @@
+// refatorado em 2024-06-10
 // Paginação para a tabela de tentativas
         (function() {
             const tbody = document.getElementById('attempts-body');
@@ -7,7 +8,7 @@
 
             let allRows = []; // armazenará nós <tr>
             let currentPage = 1;
-            let perPage = parseInt(perPageSelect.value, 10);
+            let perPage = Number.parseInt(perPageSelect.value, 10);
 
             function collectRows() {
                 // coletar linha por linha (clonar para não perder original quando escondemos)
@@ -16,7 +17,7 @@
             }
 
             function renderPage(page = 1) {
-                perPage = parseInt(perPageSelect.value, 10) || 10;
+                perPage = Number.parseInt(perPageSelect.value, 10) || 10;
                 const total = allRows.length;
                 const totalPages = Math.max(1, Math.ceil(total / perPage));
                 currentPage = Math.min(Math.max(1, page), totalPages);

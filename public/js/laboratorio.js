@@ -1,3 +1,4 @@
+//refatorado em 2024-06-10
 document.addEventListener('DOMContentLoaded', () => {
   const laboratorioForm = document.getElementById('laboratorio-form');
   const laboratorioTableBody = document.getElementById('laboratorio-tbody');
@@ -63,8 +64,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const id = document.getElementById('id').value;
     const laboratorioObj = {
       nome: document.getElementById('nome').value.trim(),
-      qtd_com_total: parseInt(document.getElementById('qtd_com_total').value) || 0,
-      qtd_sem_total: parseInt(document.getElementById('qtd_sem_total').value) || 0
+      qtd_com_total: Number.parseInt(document.getElementById('qtd_com_total').value) || 0,
+      qtd_sem_total: Number.parseInt(document.getElementById('qtd_sem_total').value) || 0
     };
 
     const method = id ? 'PUT' : 'POST';

@@ -1,5 +1,5 @@
 // main.js para gerenciamento de avaliações com paginação e busca dinâmica
-
+//refatorado em 2024-06-10
 // --- Configuração global da paginação ---
 let currentPage = 1;
 let currentSearch = '';
@@ -111,20 +111,20 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('avaliacao-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const id = document.getElementById('id').value;
-    const laboratorios = Array.from(document.getElementById('laboratorios').selectedOptions).map(option => parseInt(option.value));
+    const laboratorios = Array.from(document.getElementById('laboratorios').selectedOptions).map(option => Number.parseInt(option.value));
     const data = {
       situacao: document.getElementById('situacao').value,
       tipo: document.getElementById('tipo').value,
       data: document.getElementById('data').value,
       horario_ini: document.getElementById('horario_ini').value,
       horario_fim: document.getElementById('horario_fim').value,
-      qtd_alunos: parseInt(document.getElementById('qtd_alunos').value) || null,
+      qtd_alunos: Number.parseInt(document.getElementById('qtd_alunos').value) || null,
       caip: document.getElementById('caip').checked,
-      modulo_id: parseInt(document.getElementById('modulo_id').value) || null,
-      disciplina_id: parseInt(document.getElementById('disciplina_id').value) || null,
-      professor_id: parseInt(document.getElementById('professor_id').value) || null,
-      qtd_objetiva: parseInt(document.getElementById('qtd_objetiva').value) || null,
-      qtd_discursiva: parseInt(document.getElementById('qtd_discursiva').value) || null,
+      modulo_id: Number.parseInt(document.getElementById('modulo_id').value) || null,
+      disciplina_id: Number.parseInt(document.getElementById('disciplina_id').value) || null,
+      professor_id: Number.parseInt(document.getElementById('professor_id').value) || null,
+      qtd_objetiva: Number.parseInt(document.getElementById('qtd_objetiva').value) || null,
+      qtd_discursiva: Number.parseInt(document.getElementById('qtd_discursiva').value) || null,
       laboratorios
     };
     try {
@@ -304,7 +304,7 @@ async function editAvaliacao(id) {
     await loadLaboratorios();
     const select = document.getElementById('laboratorios');
     Array.from(select.options).forEach(option => {
-      option.selected = ava.laboratorios.some(lab => lab.id === parseInt(option.value));
+      option.selected = ava.laboratorios.some(lab => lab.id === Number.parseInt(option.value));
     });
     const modal = new bootstrap.Modal(document.getElementById('avaliacaoModal'));
     document.getElementById('avaliacaoModalLabel').textContent = 'Editar Avaliação';
