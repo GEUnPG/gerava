@@ -1,3 +1,4 @@
+//refatorado em 2024-06-10
 // src/models/ConsultaModel.js
 const pool = require('../database/db');
 
@@ -36,7 +37,7 @@ class Consulta {
 
       // total para paginação
       const countResult = await pool.query(countQuery);
-      const total = parseInt(countResult.rows[0].total, 10);
+      const total = Number.parseInt(countResult.rows[0].total, 10);
 
       // buscar laboratórios de cada avaliação
       for (let avaliacao of avaliacoes) {
