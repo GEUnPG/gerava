@@ -109,12 +109,12 @@ async function updateStatus() {
         await pool.query(
             `INSERT INTO chatbot_config (setting, value) VALUES ($1, $2)
              ON CONFLICT (setting) DO UPDATE SET value = $2, updated_at = CURRENT_TIMESTAMP`,
-            ['connection_status', global.chatbotStatus.connected ? '1' : '0']
+            ['connection_status', globalThis.chatbotStatus.connected ? '1' : '0']
         );
         await pool.query(
             `INSERT INTO chatbot_config (setting, value) VALUES ($1, $2)
              ON CONFLICT (setting) DO UPDATE SET value = $2, updated_at = CURRENT_TIMESTAMP`,
-            ['messages_sent_today', global.chatbotStatus.messagesSentToday.toString()]
+            ['messages_sent_today', globalThis.chatbotStatus.messagesSentToday.toString()]
         );
         await pool.query(
             `INSERT INTO chatbot_config (setting, value) VALUES ($1, $2)
@@ -417,8 +417,8 @@ function initializeChatbot() {
 
             case 'AWAITING_MODULO_ID':
                 {
-                    const moduloId = parseInt(body);
-                    if (isNaN(moduloId)) {
+                    const moduloId = Number.parseInt(body);
+                    if (Number.isNaN(moduloId)) {
                         await messageQueue.add({ chatId: msg.from, message: 'Por favor, digite um número válido para o módulo ou "menu" para voltar.' });
                         return;
                     }
@@ -475,8 +475,8 @@ function initializeChatbot() {
 
             case 'AWAITING_AVALIACAO_ID':
                 {
-                    const avaliacaoId = parseInt(body);
-                    if (isNaN(avaliacaoId) || avaliacaoId <= 0) {
+                    const avaliacaoId = Number.parseInt(body);
+                    if (Number.isNaN(avaliacaoId) || avaliacaoId <= 0) {
                         await messageQueue.add({ chatId: msg.from, message: 'Por favor, digite um número válido para o ID da avaliação ou "menu" para voltar.' });
                         return;
                     }
@@ -502,8 +502,8 @@ function initializeChatbot() {
 
             case 'AWAITING_PROFESSOR_ID':
                 {
-                    const professorId = parseInt(body);
-                    if (isNaN(professorId)) {
+                    const professorId = Number.parseInt(body);
+                    if (Number.isNaN(professorId)) {
                         await messageQueue.add({ chatId: msg.from, message: 'Por favor, digite um número válido para o professor ou "menu" para voltar.' });
                         return;
                     }
@@ -747,4 +747,5 @@ module.exports = {
     reloadConfig,
     stopChatbot
 };
+
 
