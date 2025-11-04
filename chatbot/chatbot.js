@@ -1,4 +1,4 @@
-// chatbot.js - Arquivo principal
+// chatbot/chatbot.js - Arquivo principal
 const { initializeClient, stopClient, registerWebSocket } = require('./whatsapp/clientManager');
 const { sendNotifications } = require('./services/notificationService');
 const { reloadConfig } = require('./services/configService');
@@ -42,6 +42,7 @@ async function sendBroadcastMessage(message, groupIds = []) {
     throw new Error('Nenhum grupo válido selecionado.');
   }
 
+  // ✅ CORRETO - Com await agora que add() retorna Promise
   for (const groupId of normalized) {
     await messageQueue.add({ chatId: groupId, message }, { delay: 1000 });
   }
@@ -57,6 +58,7 @@ async function sendMessage(chatId, message) {
     throw new Error('Respostas automáticas desativadas.');
   }
   
+  // ✅ CORRETO - Com await
   await messageQueue.add({ chatId, message }, { delay: 1000 });
   console.log(`Mensagem enfileirada para ${chatId}`);
 }
