@@ -1,0 +1,30 @@
+ /* Card-table: mantém estilo de card padrão Bootstrap, mas com largura maior */
+.card-table {
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, .125);
+  border-radius: 0.375rem;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, .075);
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+
+  /* A diferença principal — aumenta a largura */
+  width: calc(100% + 160px); /* 80px de cada lado */
+  margin-left: -80px; /* compensa para centralizar */
+  overflow-x: auto; /* evita corte horizontal */
+}
+
+/* Se quiser combinar com o interior de cards padrão */
+.card-table h3.h5 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+/* Ajuste opcional para telas menores */
+@media (max-width: 768px) {
+  .card-table {
+    width: 100%; /* volta ao normal em telas pequenas */
+    margin-left: 0;
+    padding: 1rem;
+  }
+}
