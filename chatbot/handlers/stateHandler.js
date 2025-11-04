@@ -132,7 +132,7 @@ async function handleAwaitingModuloId(msg, userState, body) {
     return;
   }
 
-  const moduloId = parseInt(body);
+  const moduloId = Number.parseInt(body);
   const response = await queryAvaliacoesByField('modulo_id', moduloId);
   await messageQueue.add({ chatId: msg.from, message: response });
   userState.state = USER_STATES.IDLE;
@@ -164,7 +164,7 @@ async function handleAwaitingAvaliacaoId(msg, userState, body) {
     return;
   }
 
-  const avaliacaoId = parseInt(body);
+  const avaliacaoId = Number.parseInt(body);
   const response = await queryAvaliacoesByField('id', avaliacaoId);
   await messageQueue.add({ chatId: msg.from, message: response });
   userState.state = USER_STATES.IDLE;
@@ -179,7 +179,7 @@ async function handleAwaitingProfessorId(msg, userState, body) {
     return;
   }
 
-  const professorId = parseInt(body);
+  const professorId = Number.parseInt(body);
   const response = await queryAvaliacoesByField('professor_id', professorId);
   await messageQueue.add({ chatId: msg.from, message: response });
   userState.state = USER_STATES.IDLE;
@@ -215,3 +215,4 @@ module.exports = {
   getUserState,
   processUserState,
 };
+
