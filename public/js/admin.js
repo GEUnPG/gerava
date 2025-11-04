@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let ws = null; // Inicializa como null
   let isChatbotConnected = false;
 
+
   function connectWebSocket() {
     // Evitar criar nova conexão se já existir uma ativa
     if (ws && ws.readyState === WebSocket.OPEN) {
@@ -16,13 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    ws = new WebSocket(`${protocol}//${window.location.host}`);
+
+    const protocol = globalThis.window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+    ws = new WebSocket(`${protocol}//${globalThis.window.location.host}`);
+
 
     ws.onopen = () => {
       console.log('Conectado ao WebSocket.');
       updateChatbotStatus('Conectado ao servidor. Aguardando status do chatbot.');
     };
+
 
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data);
@@ -65,8 +69,12 @@ document.addEventListener('DOMContentLoaded', () => {
           qrCodeContainer.style.display = 'none';
           showToast(`Erro: ${data.message}`, 'error');
           break;
+        default:
+          console.warn('Tipo de mensagem desconhecido:', data.type);
+          break;
       }
     };
+
 
     ws.onclose = () => {
       console.log('WebSocket desconectado. Tentando reconectar...');
@@ -75,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(connectWebSocket, 5000);
     };
 
+
     ws.onerror = (error) => {
       console.error('Erro no WebSocket:', error);
       updateChatbotStatus('Erro na conexão com o servidor.');
@@ -82,9 +91,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   }
 
+
   function updateChatbotStatus(message) {
     chatbotStatus.textContent = message;
   }
+
 
   function updateStartButton() {
     if (isChatbotConnected) {
@@ -97,9 +108,14 @@ document.addEventListener('DOMContentLoaded', () => {
     startChatbotButton.disabled = false;
   }
 
+
   function showToast(message, type) {
     const existingToasts = document.querySelectorAll('.toast');
-    existingToasts.forEach(toast => toast.remove());
+    // ✅ CORREÇÃO 1: Convertido de forEach para for...of
+    for (const toast of existingToasts) {
+      toast.remove();
+    }
+    
     const toast = document.createElement('div');
     toast.className = 'toast d-flex align-items-center';
     toast.innerHTML = `
@@ -134,12 +150,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 3000);
   }
 
+
   async function loadStatus() {
     try {
       const response = await fetch('/api/chatbot/status', { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -156,6 +173,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+
   async function loadConfig() {
     const buttons = {
       notifications: notificationsButton,
@@ -166,13 +184,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/api/chatbot/config', { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
       }
       const configs = await response.json();
-      configs.forEach(config => {
+      for (const config of configs) {
         const buttonId = config.setting.replace('_enabled', '').replace('auto_replies', 'autoReplies');
         const button = buttons[buttonId];
         if (button) {
@@ -180,17 +198,19 @@ document.addEventListener('DOMContentLoaded', () => {
           button.className = config.value === '1' ? 'btn btn-danger' : 'btn btn-success';
           button.disabled = false;
         }
-      });
+      }
     } catch (error) {
       console.error('Erro ao carregar configurações:', error.message);
       showToast('Erro ao carregar configurações.', 'error');
-      Object.values(buttons).forEach(button => {
+      // ✅ CORREÇÃO 2: Convertido de forEach para for...of
+      for (const button of Object.values(buttons)) {
         button.textContent = 'Erro';
         button.className = 'btn btn-secondary';
         button.disabled = false;
-      });
+      }
     }
   }
+
 
   async function toggleConfig(setting, value) {
     const buttonId = setting.replace('_enabled', '').replace('auto_replies', 'autoReplies');
@@ -207,7 +227,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         const errorData = await response.json();
@@ -227,31 +247,33 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+
   async function loadGroups() {
     const groupSelect = document.getElementById('groupSelect');
     try {
       const response = await fetch('/api/chatbot/groups', { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
       }
       const groups = await response.json();
       groupSelect.innerHTML = '';
-      groups.forEach(group => {
+      for (const group of groups) {
         const option = document.createElement('option');
         option.value = group.id;
         option.textContent = group.name;
         groupSelect.appendChild(option);
-      });
+      }
     } catch (error) {
       console.error('Erro ao carregar grupos:', error.message);
       showToast('Erro ao carregar grupos.', 'error');
       groupSelect.innerHTML = '<option>Erro ao carregar grupos</option>';
     }
   }
+
 
   function setupGroupSelection() {
     const groupSelect = document.getElementById('groupSelect');
@@ -266,6 +288,7 @@ document.addEventListener('DOMContentLoaded', () => {
       selectAllGroups.checked = allSelected;
     });
   }
+
 
   async function sendBroadcastMessage() {
     const message = document.getElementById('broadcastMessage').value.trim();
@@ -297,7 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -319,12 +342,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+
   async function loadAttempts() {
     try {
       const response = await fetch('/api/login-attempts', { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -332,7 +356,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const attempts = await response.json();
       const tbody = document.getElementById('attempts-body');
       tbody.innerHTML = '';
-      attempts.forEach(attempt => {
+      for (const attempt of attempts) {
         const row = document.createElement('tr');
         row.innerHTML = `
           <td>${attempt.id}</td>
@@ -345,16 +369,17 @@ document.addEventListener('DOMContentLoaded', () => {
           <td><button class="btn btn-sm btn-primary unblock-btn" data-ip="${attempt.ip}">Desbloquear</button></td>
         `;
         tbody.appendChild(row);
-      });
+      }
       // Adicionar event listeners aos botões de desbloqueio
-      document.querySelectorAll('.unblock-btn').forEach(btn => {
+      for (const btn of document.querySelectorAll('.unblock-btn')) {
         btn.addEventListener('click', () => unblockIp(btn.dataset.ip));
-      });
+      }
     } catch (error) {
       console.error('Erro ao carregar tentativas:', error.message);
       showAttemptsFeedback('Erro: ' + error.message, 'error');
     }
   }
+
 
   async function unblockIp(ip) {
     try {
@@ -366,7 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -380,6 +405,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+
   function showAttemptsFeedback(message, type) {
     const feedback = document.getElementById('attempts-feedback');
     feedback.textContent = message;
@@ -390,88 +416,105 @@ document.addEventListener('DOMContentLoaded', () => {
     }, 5000);
   }
 
+
+  // ✅ CORREÇÃO 3: Funções extraídas para reduzir complexidade cognitiva
+  async function stopChatbot() {
+    try {
+      updateChatbotStatus('Parando chatbot...');
+      showToast('Parando chatbot...', 'info');
+      
+      const response = await fetch('/api/chatbot/stop', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          globalThis.window.location.href = '/login.html';
+          return;
+        }
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
+      updateChatbotStatus(data.message);
+      isChatbotConnected = false;
+      updateStartButton();
+      showToast(data.message, 'success');
+      loadStatus();
+    } catch (error) {
+      console.error('Erro ao parar chatbot:', error.message);
+      updateChatbotStatus('Erro ao parar chatbot.');
+      showToast('Erro ao parar chatbot.', 'error');
+    }
+  }
+
+
+  async function startChatbot() {
+    try {
+      updateChatbotStatus('Iniciando chatbot...');
+      showToast('Iniciando chatbot...', 'info');
+      
+      const response = await fetch('/api/start-chatbot', {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      
+      if (!response.ok) {
+        if (response.status === 401) {
+          globalThis.window.location.href = '/login.html';
+          return;
+        }
+        throw new Error(`HTTP ${response.status}`);
+      }
+      
+      const data = await response.json();
+      updateChatbotStatus(data.message);
+      
+      if (data.connected) {
+        isChatbotConnected = true;
+        updateStartButton();
+        qrCodeContainer.style.display = 'none';
+        showToast(data.message, 'success');
+      }
+    } catch (error) {
+      console.error('Erro ao iniciar chatbot:', error.message);
+      updateChatbotStatus('Erro ao iniciar chatbot.');
+      showToast('Erro ao iniciar chatbot.', 'error');
+    }
+  }
+
+
   // Configurar event listeners para botões de configuração
   notificationsButton.addEventListener('click', () => {
     const currentValue = notificationsButton.textContent === 'Desativar' ? '0' : '1';
     toggleConfig('notifications_enabled', currentValue);
   });
 
+
   autoRepliesButton.addEventListener('click', () => {
     const currentValue = autoRepliesButton.textContent === 'Desativar' ? '0' : '1';
     toggleConfig('auto_replies_enabled', currentValue);
   });
+
 
   menuButton.addEventListener('click', () => {
     const currentValue = menuButton.textContent === 'Desativar' ? '0' : '1';
     toggleConfig('menu_enabled', currentValue);
   });
 
-  // Configurar evento do botão de iniciar/parar chatbot
-  startChatbotButton.addEventListener('click', () => {
+
+  // ✅ CORREÇÃO 3: Event listener simplificado usando funções extraídas
+  startChatbotButton.addEventListener('click', async () => {
     if (isChatbotConnected) {
-      updateChatbotStatus('Parando chatbot...');
-      showToast('Parando chatbot...', 'info');
-      fetch('/api/chatbot/stop', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' }
-      })
-        .then(response => {
-          if (!response.ok) {
-            if (response.status === 401) {
-              window.location.href = '/login.html';
-              return;
-            }
-            throw new Error(`HTTP ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          updateChatbotStatus(data.message);
-          isChatbotConnected = false;
-          updateStartButton();
-          showToast(data.message, 'success');
-          loadStatus();
-        })
-        .catch(error => {
-          console.error('Erro ao parar chatbot:', error.message);
-          updateChatbotStatus('Erro ao parar chatbot.');
-          showToast('Erro ao parar chatbot.', 'error');
-        });
+      await stopChatbot();
     } else {
-      updateChatbotStatus('Iniciando chatbot...');
-      showToast('Iniciando chatbot...', 'info');
-      fetch('/api/start-chatbot', {
-        method: 'POST',
-        credentials: 'include',
-        headers: { 'Content-Type': 'application/json' }
-      })
-        .then(response => {
-          if (!response.ok) {
-            if (response.status === 401) {
-              window.location.href = '/login.html';
-              return;
-            }
-            throw new Error(`HTTP ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          updateChatbotStatus(data.message);
-          if (data.connected) {
-            isChatbotConnected = true;
-            updateStartButton();
-            qrCodeContainer.style.display = 'none';
-            showToast(data.message, 'success');
-          }
-        })
-        .catch(error => {
-          console.error('Erro ao iniciar chatbot:', error.message);
-          updateChatbotStatus('Erro ao iniciar chatbot.');
-          showToast('Erro ao iniciar chatbot.', 'error');
-        });
+      await startChatbot();
     }
   });
+
 
   // Inicializar
   connectWebSocket();
@@ -483,4 +526,3 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(loadStatus, 60000);
   document.getElementById('sendBroadcast').addEventListener('click', sendBroadcastMessage);
 });
-
