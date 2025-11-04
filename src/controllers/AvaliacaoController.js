@@ -1,3 +1,4 @@
+//refatorado em 2024-06-10
 //src/controllers/AvaliacaoController.js   arrumando
 const Avaliacao = require('../models/AvaliacaoModel');
 const pool = require('../database/db');
@@ -21,23 +22,11 @@ class AvaliacaoController {
     }
   }
 
-//   static async list(req, res) {
-//     console.log('Acessando GET /api/avaliacoes');
-//     try {
-//       const avaliacoes = await Avaliacao.findAll();
-//       res.json(avaliacoes);
-//     } catch (error) {
-//       console.error('Erro em list:', error.message, error.stack);
-//       res.status(500).json({ error: 'Erro ao listar avaliações', details: error.message });
-//     }
-//   }
-    
-
 static async list(req, res) {
   try {
     // Parse e validação dos parâmetros de paginação
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 10;
+    const page = Number.parseInt(req.query.page) || 1;
+    const limit = Number.parseInt(req.query.limit) || 10;
     const offset = (page - 1) * limit;
 
     // Filtro de pesquisa dinâmico
@@ -61,7 +50,7 @@ static async list(req, res) {
   static async getById(req, res) {
     console.log(`Acessando GET /api/avaliacoes/${req.params.id}`);
     try {
-      const id = parseInt(req.params.id);
+      const id = Number.parseInt(req.params.id);
       if (isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
@@ -80,7 +69,7 @@ static async list(req, res) {
   static async update(req, res) {
     console.log(`Acessando PUT /api/avaliacoes/${req.params.id}`);
     try {
-      const id = parseInt(req.params.id);
+      const id = Number.parseInt(req.params.id);
       if (isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
@@ -99,7 +88,7 @@ static async list(req, res) {
   static async delete(req, res) {
     console.log(`Acessando DELETE /api/avaliacoes/${req.params.id}`);
     try {
-      const id = parseInt(req.params.id);
+      const id = Number.parseInt(req.params.id);
       if (isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
@@ -114,7 +103,7 @@ static async list(req, res) {
   static async updateVisivel(req, res) {
     console.log(`Acessando PATCH /api/avaliacoes/${req.params.id}/visivel`);
     try {
-      const id = parseInt(req.params.id);
+      const id = Number.parseInt(req.params.id);
       const { visivel } = req.body;
       if (isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
@@ -133,7 +122,7 @@ static async list(req, res) {
   static async updateDeleteLogico(req, res) {
     console.log(`Acessando PATCH /api/avaliacoes/${req.params.id}/delete-logico`);
     try {
-      const id = parseInt(req.params.id);
+      const id = Number.parseInt(req.params.id);
       const { delete_logico } = req.body;
       if (isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
@@ -202,7 +191,7 @@ static async list(req, res) {
       if (!data || !horario_ini || !horario_fim || !qtd_alunos) {
         return res.status(400).json({ error: 'Campos data, horario_ini, horario_fim e qtd_alunos são obrigatórios' });
       }
-      const qtdAlunosInt = parseInt(qtd_alunos);
+      const qtdAlunosInt = Number.parseInt(qtd_alunos);
       if (isNaN(qtdAlunosInt) || qtdAlunosInt <= 0) {
         return res.status(400).json({ error: 'qtd_alunos deve ser um número positivo' });
       }

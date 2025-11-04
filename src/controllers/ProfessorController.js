@@ -1,3 +1,5 @@
+//refatorado em 2024-06-10
+//src/controllers/ProfessorController.js
 const ProfessorModel = require('../models/ProfessorModel');
 
 class ProfessorController {
@@ -31,7 +33,7 @@ class ProfessorController {
   // Obter professor por ID
   static async getById(req, res) {
     const { id } = req.params;
-    if (!id || isNaN(id)) {
+    if (!id || Number.isNaN(id)) {
       return res.status(400).json({ error: 'ID inválido.' });
     }
     try {
@@ -47,7 +49,7 @@ class ProfessorController {
   static async update(req, res) {
     const { id } = req.params;
     const { nome } = req.body;
-    if (!id || isNaN(id)) {
+    if (!id || Number.isNaN(id)) {
       return res.status(400).json({ error: 'ID inválido.' });
     }
     if (!nome || typeof nome !== 'string' || nome.trim().length === 0) {
@@ -65,7 +67,7 @@ class ProfessorController {
   // Deletar professor
   static async delete(req, res) {
     const { id } = req.params;
-    if (!id || isNaN(id)) {
+    if (!id || Number.isNaN(id)) {
       return res.status(400).json({ error: 'ID inválido.' });
     }
     try {

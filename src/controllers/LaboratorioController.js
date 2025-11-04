@@ -1,3 +1,5 @@
+//refatorado em 2024-06-10
+//src/controllers/LaboratorioController.js
 const Laboratorio = require('../models/LaboratorioModel');
 
 class LaboratorioController {
@@ -31,7 +33,7 @@ class LaboratorioController {
   static async getById(req, res) {
     console.log(`Acessando GET /api/laboratorios/${req.params.id}`);
     try {
-      const id = parseInt(req.params.id);
+      const id = Number.parseInt(req.params.id);
       if (isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
@@ -50,7 +52,7 @@ class LaboratorioController {
   static async update(req, res) {
     console.log(`Acessando PUT /api/laboratorios/${req.params.id}`, req.body);
     try {
-      const id = parseInt(req.params.id);
+      const id = Number.parseInt(req.params.id);
       if (isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }
@@ -73,7 +75,7 @@ class LaboratorioController {
   static async delete(req, res) {
     console.log(`Acessando DELETE /api/laboratorios/${req.params.id}`);
     try {
-      const id = parseInt(req.params.id);
+      const id = Number.parseInt(req.params.id);
       if (isNaN(id) || id <= 0) {
         return res.status(400).json({ error: 'ID inválido' });
       }

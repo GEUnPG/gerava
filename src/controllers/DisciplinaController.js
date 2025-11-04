@@ -1,3 +1,5 @@
+//refatorado em 2024-06-10
+//src/controllers/DisciplinaController.js
 const DisciplinaModel = require('../models/DisciplinaModel');
 
 class DisciplinaController {
@@ -75,19 +77,6 @@ class DisciplinaController {
 }
 
 static async getProfessores(req, res) {
-  console.log('Acessando GET /api/disciplinas/professores');
-  try {
-    const professores = await DisciplinaModel.getProfessores();
-    console.log('Professores enviados:', professores);
-    res.json(professores);
-  } catch (error) {
-    console.error('Erro em getProfessores:', error.message, error.stack);
-    res.status(500).json({ error: 'Erro ao buscar professores', details: error.message });
-  }
-}
-
-  
-  static async getProfessores(req, res) {
   console.log('Acessando GET /api/disciplinas/professores');
   try {
     const professores = await DisciplinaModel.getProfessores();

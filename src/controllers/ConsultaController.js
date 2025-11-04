@@ -1,3 +1,7 @@
+//refatorado em 2024-06-10
+// // src/controllers/ConsultaController.js # sanitizado para xss
+// const Consulta = require('../models/ConsultaModel');
+
 // src/controllers/ConsultaController.js # funcionando
 const Consulta = require('../models/ConsultaModel');
 
@@ -6,8 +10,8 @@ class ConsultaController {
   static async listPublic(req, res) {
     console.log('Acessando GET /api/consulta/public');
     try {
-      const page = parseInt(req.query.page) || 1;
-      const limit = parseInt(req.query.limit) || 10;
+      const page = Number.parseInt(req.query.page) || 1;
+      const limit = Number.parseInt(req.query.limit) || 10;
       const offset = (page - 1) * limit;
 
       const { avaliacoes, total } = await Consulta.findAllPublic(limit, offset);
@@ -38,4 +42,3 @@ class ConsultaController {
 }
 
 module.exports = ConsultaController;
-

@@ -1,3 +1,4 @@
+//refatorado em 2024-06-10
 const pool = require('../database/db');
 const { sendBroadcastMessage, reloadConfig } = require('../../chatbot'); // Adiciona reloadConfig
 
@@ -77,11 +78,11 @@ const ChatbotController = {
         ['connection_status', 'messages_sent_today', 'messages_received_today']
       );
       const usersResult = await pool.query('SELECT COUNT(*) AS count FROM chatbot_users WHERE subscribed = true');
-      status.subscribedUsers = parseInt(usersResult.rows[0].count) || 0;
+      status.subscribedUsers = Number.parseInt(usersResult.rows[0].count) || 0;
       for (const row of configResult.rows) {
         if (row.setting === 'connection_status') status.connected = row.value === '1';
-        if (row.setting === 'messages_sent_today') status.messagesSentToday = parseInt(row.value) || 0;
-        if (row.setting === 'messages_received_today') status.messagesReceivedToday = parseInt(row.value) || 0;
+        if (row.setting === 'messages_sent_today') status.messagesSentToday = Number.parseInt(row.value) || 0;
+        if (row.setting === 'messages_received_today') status.messagesReceivedToday = Number.parseInt(row.value) || 0;
       }
       res.status(200).json(status);
     } catch (error) {
