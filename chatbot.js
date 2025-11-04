@@ -90,9 +90,10 @@ async function getConfig(setting) {
             'SELECT setting, value FROM chatbot_config WHERE setting IN ($1, $2, $3)',
             ['notifications_enabled', 'auto_replies_enabled', 'menu_enabled']
         );
-        result.rows.forEach(row => {
+        // ✅ Mudança aqui: for...of ao invés de forEach
+        for (const row of result.rows) {
             configCache[row.setting] = row.value;
-        });
+        }
         configCache.lastUpdated = now;
         console.log('Configurações atualizadas no cache:', configCache);
         if (!setting) return { ...configCache };
@@ -169,9 +170,9 @@ function formatAvaliacoes(rows) {
         return 'Nenhuma avaliação encontrada. Deseja tentar outra consulta ou voltar ao menu? (Digite "menu" para o menu principal)';
     }
     let response = 'Avaliações encontradas:\n\n';
-    rows.forEach(row => {
+    for (const row of rows) {
         response += `Data: ${formatDate(row.data)}\nDisciplina: ${row.disciplina_nome || 'Sem disciplina'}\nHorário: ${formatTime(row.horario_ini)} - ${formatTime(row.horario_fim)}\nLocal: ${row.laboratorios || 'Sem laboratórios'}\n\n`;
-    });
+    }
     response += '\nDeseja fazer outra consulta ou voltar ao menu? (Digite "menu" para o menu principal)';
     return response;
 }
@@ -223,28 +224,28 @@ function initializeChatbot() {
     client.on('qr', async qr => {
         try {
             const qrDataUrl = await QRCode.toDataURL(qr);
-            wsClients.forEach(ws => {
+            for (const ws of wsClients) {
                 if (ws.isOpen) {
                     ws.send(JSON.stringify({ type: 'qr', data: qrDataUrl }));
                 }
-            });
+            }
             console.log('QR code gerado e enviado via WebSocket.');
         } catch (error) {
             console.error('Erro ao gerar QR code:', error.message);
-            wsClients.forEach(ws => {
+            for (const ws of wsClients) {
                 if (ws.isOpen) {
                     ws.send(JSON.stringify({ type: 'error', message: 'Erro ao gerar QR code.' }));
                 }
-            });
+            }
         }
     });
 
     client.on('auth_failure', msg => {
         console.error('Falha de autenticação do WhatsApp:', msg);
         globalThis.chatbotStatus.connected = false;
-        wsClients.forEach(ws => {
+        for (const ws of wsClients) {
             if (ws.isOpen) ws.send(JSON.stringify({ type: 'error', message: 'Falha de autenticação. Refaça o login via QR.' }));
-        });
+        }
     });
 
     // Conexão confirmada
@@ -258,11 +259,11 @@ function initializeChatbot() {
             startNotificationRoutine();
             // dispara processamento da fila pendente ao conectar
             messageQueue.process();
-            wsClients.forEach(ws => {
+            for (const ws of wsClients {
                 if (ws.isOpen) {
                     ws.send(JSON.stringify({ type: 'connected', message: 'Chatbot conectado!' }));
                 }
-            });
+            }
             try {
                 const chats = await client.getChats();
                 const groups = chats.filter(c => c.isGroup).map(c => ({ id: c.id._serialized, name: c.name }));
@@ -281,11 +282,11 @@ function initializeChatbot() {
         globalThis.chatbotStatus.connected = false;
         await updateStatus();
         client = null;
-        wsClients.forEach(ws => {
+        for (const ws of wsClients) {
             if (ws.isOpen) {
                 ws.send(JSON.stringify({ type: 'disconnected', message: 'Chatbot desconectado.' }));
             }
-        });
+        }
     });
 
     // Manipulação de mensagens
@@ -367,9 +368,9 @@ function initializeChatbot() {
                                     return;
                                 }
                                 let response = 'Escolha um módulo (digite o número):\n\n';
-                                globalThis.modulos.forEach(mod => {
+                                for (const mod of globalThis.modulos) {
                                     response += `${mod.id} - ${mod.nome}\n`;
-                                });
+                                }
                                 await messageQueue.add({ chatId: msg.from, message: response });
                                 userState.state = 'AWAITING_MODULO_ID';
                             } catch (error) {
@@ -398,9 +399,9 @@ function initializeChatbot() {
                                     return;
                                 }
                                 let response = 'Escolha um professor (digite o número):\n\n';
-                                globalThis.professores.forEach(prof => {
+                                for (const prof of globalThis.professores) {
                                     response += `${prof.id} - ${prof.nome}\n`;
-                                });
+                                }
                                 await messageQueue.add({ chatId: msg.from, message: response });
                                 userState.state = 'AWAITING_PROFESSOR_ID';
                             } catch (error) {
@@ -721,11 +722,11 @@ async function stopChatbot() {
             if (statusInterval) clearInterval(statusInterval);
             notificationInterval = cacheInterval = statusInterval = null;
 
-            wsClients.forEach(ws => {
+            for (const ws of wsClients) {
                 if (ws.isOpen) {
                     ws.send(JSON.stringify({ type: 'disconnected', message: 'Chatbot parado com sucesso.' }));
                 }
-            });
+            }
             console.log('Chatbot parado com sucesso.');
             return { message: 'Chatbot parado com sucesso.' };
         } else {
@@ -747,5 +748,6 @@ module.exports = {
     reloadConfig,
     stopChatbot
 };
+
 
 
