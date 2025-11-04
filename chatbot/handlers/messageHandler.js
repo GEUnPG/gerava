@@ -1,19 +1,3 @@
-// handlers/messageHandler.js
-const { getConfig } = require('../services/configService');
-const { chatbotStatus } = require('../services/statusService');
-const { updateStatus } = require('../services/configService');
-const { addOrUpdateUser, manageSubscription } = require('../database/queries');
-const messageQueue = require('../services/messageQueue');
-const { processUserState, getUserState, initializeUserState } = require('./stateHandler');
-const { showMainMenu } = require('./menuHandler');
-
-async function handleIncomingMessage(msg) {
-  if (!msg.from.endsWith('@c.us')) return;
-
-  chatbotStatus.messagesReceivedToday++;
-  if (chatbotStatus.messagesReceivedToday % 100 === 0) {
-    await updateStatus();
-  }
 // chatbot/handlers/messageHandler.js
 const { getConfig } = require('../services/configService');
 const { chatbotStatus } = require('../services/statusService');
@@ -146,4 +130,5 @@ module.exports = {
 module.exports = {
   handleIncomingMessage,
 };
+
 
