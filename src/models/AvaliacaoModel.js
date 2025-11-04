@@ -1,6 +1,7 @@
 //refatorado em 2024-06-10
 // src/models/AvaliacaoModel.js  rumando
 const pool = require('../database/db');
+const erro_prof = 'modulo_id, disciplina_id e professor_id devem ser números inteiros';
 
 class Avaliacao {
   // Verifica conflitos de horário e capacidade
@@ -79,7 +80,7 @@ class Avaliacao {
       throw new Error('qtd_alunos deve ser um número inteiro positivo');
     }
     if (!Number.isInteger(modulo_id) || !Number.isInteger(disciplina_id) || !Number.isInteger(professor_id)) {
-      throw new Error('modulo_id, disciplina_id e professor_id devem ser números inteiros');
+      throw new Error(erro_prof);
     }
 
     await this.validateLaboratorios(inputData);
@@ -123,7 +124,7 @@ class Avaliacao {
       throw new Error('qtd_alunos deve ser um número inteiro positivo');
     }
     if (!Number.isInteger(modulo_id) || !Number.isInteger(disciplina_id) || !Number.isInteger(professor_id)) {
-      throw new Error('modulo_id, disciplina_id e professor_id devem ser números inteiros');
+      throw new Error(erro_prof);
     }
 
     await this.validateLaboratorios(inputData, id);
@@ -369,5 +370,6 @@ static async findAllPaginated({ offset, limit, search }) {
     return result.rows;
   }
 }
+
 
 module.exports = Avaliacao;
