@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Renderizar professores na tabela
     function renderProfessors(professores) {
       professorTableBody.innerHTML = '';
-      professores.forEach(professor => {
+      for (const professor of professores) {
         const row = document.createElement('tr');
         row.innerHTML = `
           <td><button class="btn btn-sm btn-primary" onclick="editProfessor(${professor.id})"><i class="fas fa-edit"></i></button></td>
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <td><button class="btn btn-sm btn-danger" onclick="deleteProfessor(${professor.id})"><i class="fas fa-trash"></i></button></td>
         `;
         professorTableBody.appendChild(row);
-      });
+      }
     }
   
     // Busca de professores

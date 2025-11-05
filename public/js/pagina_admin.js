@@ -115,5 +115,5 @@
             });
 
             // expor função global caso seja necessário forçar atualização após alterações
-            window.refreshAttemptsPagination = () => initPagination(true);
+            globalThis.window.refreshAttemptsPagination = () => initPagination(true);
         })();

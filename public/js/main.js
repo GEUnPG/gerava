@@ -1,5 +1,5 @@
 // public/js/main.js - Refatorado para conformidade com SonarQube
-// Refatorado em 2024-11-04
+// Refatorado em 2025-11-05
 
 // ===== CONFIGURAÇÃO GLOBAL =====
 
@@ -201,7 +201,7 @@ function renderAvaliacoes(avaliacoes) {
   tbody.innerHTML = '';
   
   if (avaliacoes.length === 0) {
-    const colCount = Object.values(preferences).filter(v => v).length;
+    const colCount = Object.values(preferences).filter(Boolean).length;
     tbody.innerHTML = `<tr><td colspan="${colCount}" class="text-center">Nenhuma avaliação encontrada.</td></tr>`;
     return;
   }
