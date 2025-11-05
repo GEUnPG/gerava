@@ -1,3 +1,13 @@
+//public/js/admin.js
+//refatorado em 2025-11-06
+function redirectToLoginIfUnauthorized(status) {
+    if (status === 401) {
+      globalThis.window.location.href = '/login.html';
+      return true;
+    }
+    return false;
+  }
+
 document.addEventListener('DOMContentLoaded', () => {
   const startChatbotButton = document.getElementById('startChatbot');
   const chatbotStatus = document.getElementById('chatbotStatus');
@@ -10,14 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
   let isChatbotConnected = false;
 
   // ===== HELPERS GLOBAIS =====
-
-  function redirectToLoginIfUnauthorized(status) {
-    if (status === 401) {
-      globalThis.window.location.href = '/login.html';
-      return true;
-    }
-    return false;
-  }
 
   function hideQrCode() {
     qrCodeContainer.style.display = 'none';
