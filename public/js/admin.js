@@ -318,7 +318,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = document.getElementById('broadcastMessage').value.trim();
     const groupSelect = document.getElementById('groupSelect');
     const selectedGroups = Array.from(groupSelect.selectedOptions).map(option => option.value);
-    const broadcastStatus = document.getElementById('broadcastStatus');
     const sendButton = document.getElementById('sendBroadcast');
 
     if (!message) {

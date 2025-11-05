@@ -96,7 +96,6 @@
                 if (initTimer) clearTimeout(initTimer);
                 initTimer = setTimeout(() => {
                     collectRows();
-                    const prevTotal = allRows.length;
                     if (resetPage) currentPage = 1;
                     renderPage(currentPage);
                 }, 100); // 100ms debounce

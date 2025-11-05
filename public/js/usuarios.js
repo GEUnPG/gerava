@@ -1,5 +1,5 @@
 //public/js/usuarios.js
-//refatorado em 2025-11-06
+//refatorado em 2025-11-06 feito
 document.addEventListener('DOMContentLoaded', () => {
   const usuarioForm = document.getElementById('usuario-form');
   const usuarioTableBody = document.getElementById('usuario-tbody');
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
     reqSymbol.className = /[@$!%*?&]/.test(value) ? 'text-success' : 'text-danger';
   });
 
-  //passwordInput = document.getElementById('password');
+  // Toggle visibilidade da senha
   const togglePassword = document.getElementById('togglePassword');
   const eyeIcon = document.getElementById('eyeIcon');
 
