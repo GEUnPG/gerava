@@ -1,3 +1,5 @@
+//public/js/professor.js
+//refatorado em 2025-11-06
 document.addEventListener('DOMContentLoaded', () => {
     const professorForm = document.getElementById('professor-form');
     const professorTableBody = document.getElementById('professor-tbody');
@@ -10,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch('/api/professores', { credentials: 'include' });
         if (!response.ok) {
           if (response.status === 401) {
-            window.location.href = '/login.html';
+            globalThis.window.location.href = '/login.html';
             return;
           }
           throw new Error(`HTTP ${response.status}`);
@@ -45,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const response = await fetch(`/api/professores?search=${encodeURIComponent(query)}`, { credentials: 'include' });
         if (!response.ok) {
           if (response.status === 401) {
-            window.location.href = '/login.html';
+            globalThis.window.location.href = '/login.html';
             return;
           }
           throw new Error(`HTTP ${response.status}`);
@@ -79,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = await response.json();
         if (!response.ok) {
           if (response.status === 401) {
-            window.location.href = '/login.html';
+            globalThis.window.location.href = '/login.html';
             return;
           }
           throw new Error(result.error || 'Erro ao salvar professor');
@@ -95,12 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   
     // Editar professor
-    window.editProfessor = async (id) => {
+    globalThis.window.editProfessor = async (id) => {
       try {
         const response = await fetch(`/api/professores/${id}`, { credentials: 'include' });
         if (!response.ok) {
           if (response.status === 401) {
-            window.location.href = '/login.html';
+            globalThis.window.location.href = '/login.html';
             return;
           }
           throw new Error(`HTTP ${response.status}`);
@@ -116,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   
     // Deletar professor
-    window.deleteProfessor = async (id) => {
+    globalThis.window.deleteProfessor = async (id) => {
       if (!confirm('Tem certeza que deseja excluir este professor?')) return;
       try {
         const response = await fetch(`/api/professores/${id}`, {
@@ -126,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const result = await response.json();
         if (!response.ok) {
           if (response.status === 401) {
-            window.location.href = '/login.html';
+            globalThis.window.location.href = '/login.html';
             return;
           }
           throw new Error(result.error || 'Erro ao excluir professor');
@@ -140,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
   
     // Limpar formulário
-    window.clearForm = () => {
+    globalThis.window.clearForm = () => {
       professorForm.reset();
       document.getElementById('id').value = '';
       showFeedback('Formulário limpo.', 'info');

@@ -1,3 +1,5 @@
+//public/js/tipoAval.js
+//refatorado em 2025-11-06
 document.addEventListener('DOMContentLoaded', () => {
   const tipoForm = document.getElementById('tipo-form');
   const tipoTableBody = document.getElementById('tipo-tbody');
@@ -10,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/api/tipo_aval', { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -26,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Renderizar tipos na tabela
   function renderTipos(tipos) {
     tipoTableBody.innerHTML = '';
-    tipos.forEach(tipo => {
+    for (const tipo of tipos) {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><button class="btn btn-sm btn-primary" onclick="editTipo(${tipo.id})"><i class="fas fa-edit"></i></button></td>
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td><button class="btn btn-sm btn-danger" onclick="deleteTipo(${tipo.id})"><i class="fas fa-trash"></i></button></td>
       `;
       tipoTableBody.appendChild(row);
-    });
+    }
   }
 
   // Busca de tipos
@@ -45,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch(`/api/tipo_aval?search=${encodeURIComponent(query)}`, { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -79,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = await response.json();
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(result.error || 'Erro ao salvar tipo');
@@ -95,12 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Editar tipo
-  window.editTipo = async (id) => {
+  globalThis.window.editTipo = async (id) => {
     try {
       const response = await fetch(`/api/tipo_aval/${id}`, { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -116,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Deletar tipo
-  window.deleteTipo = async (id) => {
+  globalThis.window.deleteTipo = async (id) => {
     if (!confirm('Tem certeza que deseja excluir este tipo?')) return;
     try {
       const response = await fetch(`/api/tipo_aval/${id}`, {
@@ -126,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = await response.json();
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(result.error || 'Erro ao excluir tipo');
@@ -140,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Limpar formulário
-  window.clearForm = () => {
+  globalThis.window.clearForm = () => {
     tipoForm.reset();
     document.getElementById('id').value = '';
     showFeedback('Formulário limpo.', 'info');

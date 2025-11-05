@@ -1,4 +1,5 @@
-// refatorado em 2024-06-10
+//public/js/pagina_admin.js
+// refatorado em 2025-11-06
 // Paginação para a tabela de tentativas
         (function() {
             const tbody = document.getElementById('attempts-body');
@@ -29,7 +30,9 @@
                 const start = (currentPage - 1) * perPage;
                 const end = start + perPage;
                 const slice = allRows.slice(start, end);
-                slice.forEach(r => tbody.appendChild(r.cloneNode(true)));
+                for (const r of slice) {
+                    tbody.appendChild(r.cloneNode(true));
+                }
 
                 renderPaginationControls(totalPages);
                 updateInfo(total, start + 1, Math.min(end, total));

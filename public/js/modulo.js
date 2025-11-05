@@ -1,3 +1,5 @@
+//public/js/modulo.js
+//refatorado em 2025-11-06
 document.addEventListener('DOMContentLoaded', () => {
   const moduloForm = document.getElementById('modulo-form');
   const moduloTableBody = document.getElementById('modulo-tbody');
@@ -10,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/api/modulos', { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -26,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Renderizar módulos na tabela
   function renderModulos(modulos) {
     moduloTableBody.innerHTML = '';
-    modulos.forEach(modulo => {
+    for (const modulo of modulos) {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><button class="btn btn-sm btn-primary" onclick="editModulo(${modulo.id})"><i class="fas fa-edit"></i></button></td>
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td><button class="btn btn-sm btn-danger" onclick="deleteModulo(${modulo.id})"><i class="fas fa-trash"></i></button></td>
       `;
       moduloTableBody.appendChild(row);
-    });
+    }
   }
 
   // Busca de módulos
@@ -45,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch(`/api/modulos?search=${encodeURIComponent(query)}`, { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -79,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = await response.json();
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(result.error || 'Erro ao salvar módulo');
@@ -95,12 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Editar módulo
-  window.editModulo = async (id) => {
+  globalThis.window.editModulo = async (id) => {
     try {
       const response = await fetch(`/api/modulos/${id}`, { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -116,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Deletar módulo
-  window.deleteModulo = async (id) => {
+  globalThis.window.deleteModulo = async (id) => {
     if (!confirm('Tem certeza que deseja excluir este módulo?')) return;
     try {
       const response = await fetch(`/api/modulos/${id}`, {
@@ -126,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = await response.json();
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(result.error || 'Erro ao excluir módulo');
@@ -140,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Limpar formulário
-  window.clearForm = () => {
+  globalThis.window.clearForm = () => {
     moduloForm.reset();
     document.getElementById('id').value = '';
     showFeedback('Formulário limpo.', 'info');

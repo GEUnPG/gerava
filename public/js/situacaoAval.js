@@ -1,3 +1,5 @@
+//public/js/situacaoAval.js
+//refatorado em 2025-11-06
 document.addEventListener('DOMContentLoaded', () => {
   const situacaoForm = document.getElementById('situacao-form');
   const situacaoTableBody = document.getElementById('situacao-tbody');
@@ -10,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/api/situacao_aval', { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -26,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Renderizar situações na tabela
   function renderSituacoes(situacoes) {
     situacaoTableBody.innerHTML = '';
-    situacoes.forEach(situacao => {
+    for (const situacao of situacoes) {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><button class="btn btn-sm btn-primary" onclick="editSituacao(${situacao.id})"><i class="fas fa-edit"></i></button></td>
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td><button class="btn btn-sm btn-danger" onclick="deleteSituacao(${situacao.id})"><i class="fas fa-trash"></i></button></td>
       `;
       situacaoTableBody.appendChild(row);
-    });
+    }
   }
 
   // Busca de situações
@@ -45,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch(`/api/situacao_aval?search=${encodeURIComponent(query)}`, { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -79,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = await response.json();
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(result.error || 'Erro ao salvar situação');
@@ -95,12 +97,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Editar situação
-  window.editSituacao = async (id) => {
+  globalThis.window.editSituacao = async (id) => {
     try {
       const response = await fetch(`/api/situacao_aval/${id}`, { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -116,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Deletar situação
-  window.deleteSituacao = async (id) => {
+  globalThis.window.deleteSituacao = async (id) => {
     if (!confirm('Tem certeza que deseja excluir esta situação?')) return;
     try {
       const response = await fetch(`/api/situacao_aval/${id}`, {
@@ -126,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = await response.json();
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(result.error || 'Erro ao excluir situação');
@@ -140,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Limpar formulário
-  window.clearForm = () => {
+  globalThis.window.clearForm = () => {
     situacaoForm.reset();
     document.getElementById('id').value = '';
     showFeedback('Formulário limpo.', 'info');

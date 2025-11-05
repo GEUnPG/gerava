@@ -1,3 +1,5 @@
+//public/js/usuarios.js
+//refatorado em 2025-11-06
 document.addEventListener('DOMContentLoaded', () => {
   const usuarioForm = document.getElementById('usuario-form');
   const usuarioTableBody = document.getElementById('usuario-tbody');
@@ -39,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch('/api/usuarios', { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -55,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Renderizar usuários na tabela
   function renderUsuarios(usuarios) {
     usuarioTableBody.innerHTML = '';
-    usuarios.forEach(usuario => {
+    for (const usuario of usuarios) {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><button class="btn btn-sm btn-primary" onclick="editUsuario(${usuario.id})"><i class="fas fa-edit"></i></button></td>
@@ -65,7 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td><button class="btn btn-sm btn-danger" onclick="deleteUsuario(${usuario.id})"><i class="fas fa-trash"></i></button></td>
       `;
       usuarioTableBody.appendChild(row);
-    });
+    }
   }
 
   // Busca de usuários
@@ -75,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch(`/api/usuarios?search=${encodeURIComponent(query)}`, { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -118,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = await response.json();
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(result.error || 'Erro ao salvar usuário');
@@ -134,12 +136,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Editar usuário
-  window.editUsuario = async (id) => {
+  globalThis.window.editUsuario = async (id) => {
     try {
       const response = await fetch(`/api/usuarios/${id}`, { credentials: 'include' });
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(`HTTP ${response.status}`);
@@ -157,7 +159,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Deletar usuário
-  window.deleteUsuario = async (id) => {
+  globalThis.window.deleteUsuario = async (id) => {
     if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
     try {
       const response = await fetch(`/api/usuarios/${id}`, {
@@ -167,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const result = await response.json();
       if (!response.ok) {
         if (response.status === 401) {
-          window.location.href = '/login.html';
+          globalThis.window.location.href = '/login.html';
           return;
         }
         throw new Error(result.error || 'Erro ao excluir usuário');
@@ -181,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Limpar formulário
-  window.clearForm = () => {
+  globalThis.window.clearForm = () => {
     usuarioForm.reset();
     document.getElementById('id').value = '';
     showFeedback('Formulário limpo.', 'info');

@@ -20,7 +20,7 @@ let blockTimer = null;
 
   const result = await response.json();
   if (response.ok) {
-    window.location.href = '/dashboard.html';
+    globalThis.window.location.href = '/dashboard.html';
   } else if (response.status === 429) {
     showFeedback('Muitas requisições. Tente novamente após 15 minutos.', 'error');
     startBlockTimer(15 * 60);
@@ -89,7 +89,7 @@ let blockTimer = null;
 
     function showToast(message, type) {
       const existingToasts = document.querySelectorAll('.toast');
-      existingToasts.forEach(toast => toast.remove());
+      for (const toast of existingToasts) { toast.remove(); }
 
       const toast = document.createElement('div');
       toast.className = 'toast d-flex align-items-center';

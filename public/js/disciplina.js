@@ -1,3 +1,5 @@
+//public/js/disciplina.js
+//refatorado em 2025-11-06
 document.addEventListener('DOMContentLoaded', () => {
   const disciplinaForm = document.getElementById('disciplina-form');
   const disciplinaTableBody = document.getElementById('disciplina-tbody');
@@ -19,12 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (modulos.length === 0) {
       showFeedback('Nenhum módulo encontrado no banco de dados.', 'danger');
     }
-    modulos.forEach(modulo => {
+    for (const modulo of modulos) {
       const option = document.createElement('option');
       option.value = modulo.id;
       option.textContent = modulo.nome;
       moduloSelect.appendChild(option);
-    });
+    }
     console.log('Módulos carregados:', modulos);
   } catch (error) {
     console.error('Erro ao carregar módulos:', error);
@@ -45,12 +47,12 @@ document.addEventListener('DOMContentLoaded', () => {
       if (professores.length === 0) {
         showFeedback('Nenhum professor encontrado no banco de dados.', 'danger');
       }
-      professores.forEach(professor => {
+      for (const professor of professores) {
         const option = document.createElement('option');
         option.value = professor.id;
         option.textContent = professor.nome;
         professorSelect.appendChild(option);
-      });
+      }
       console.log('Professores carregados:', professores);
     } catch (error) {
       console.error('Erro ao carregar professores:', error);
@@ -78,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Renderizar disciplinas na tabela
   function renderDisciplinas(disciplinas) {
     disciplinaTableBody.innerHTML = '';
-    disciplinas.forEach(disciplina => {
+    for (const disciplina of disciplinas) {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><button class="btn btn-sm btn-primary" onclick="editDisciplina(${disciplina.id})"><i class="fas fa-edit"></i></button></td>
@@ -89,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td><button class="btn btn-sm btn-danger" onclick="deleteDisciplina(${disciplina.id})"><i class="fas fa-trash"></i></button></td>
       `;
       disciplinaTableBody.appendChild(row);
-    });
+    }
   }
 
   // Busca de disciplinas
@@ -147,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Editar disciplina
-  window.editDisciplina = async (id) => {
+  globalThis.window.editDisciplina = async (id) => {
     try {
       console.log(`Carregando disciplina ${id} para edição`);
       const response = await fetch(`/api/disciplinas/${id}`, { credentials: 'include' });
@@ -167,7 +169,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Deletar disciplina
-  window.deleteDisciplina = async (id) => {
+  globalThis.window.deleteDisciplina = async (id) => {
     if (!confirm('Tem certeza que deseja excluir esta disciplina?')) return;
     try {
       console.log(`Excluindo disciplina ${id}`);
@@ -188,7 +190,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Limpar formulário
-  window.clearForm = () => {
+  globalThis.window.clearForm = () => {
     console.log('Resetando formulário');
     disciplinaForm.reset();
     document.getElementById('id').value = '';

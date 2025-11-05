@@ -1,3 +1,5 @@
+//public/js/main_consulta.js
+//refatorado em 2025-11-06
 // Função auxiliar para formatar data no formato dd-mm-aaaa #analisando brechas de segurança xss
 function formatDate(isoDate) {
   if (!isoDate) return '';
@@ -94,7 +96,7 @@ async function loadAllAvaliacoes() {
 function renderAvaliacoes(avaliacoes) {
   const tbody = document.getElementById('avaliacao-tbody');
   tbody.innerHTML = '';
-  avaliacoes.forEach(ava => {
+  for (const ava of avaliacoes) {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${ava.id}</td>
@@ -112,7 +114,7 @@ function renderAvaliacoes(avaliacoes) {
       <td>${ava.laboratorios?.map(l => `${l.nome} (Capacidade: ${ava.caip ? l.qtd_com_total : l.qtd_sem_total})`).join(', ') || ''}</td>
     `;
     tbody.appendChild(row);
-  });
+  }
 }
 
 // Filtro de busca (somente em allAvaliacoes)

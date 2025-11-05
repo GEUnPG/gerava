@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Renderizar conjuntos na tabela
   function renderLaboratorios(laboratorios) {
     laboratorioTableBody.innerHTML = '';
-    laboratorios.forEach(lab => {
+    for (const lab of laboratorios) {
       const row = document.createElement('tr');
       row.innerHTML = `
         <td><button class="btn btn-sm btn-primary" onclick="editLaboratorio(${lab.id})"><i class="fas fa-edit"></i></button></td>
@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <td><button class="btn btn-sm btn-danger" onclick="deleteLaboratorio(${lab.id})"><i class="fas fa-trash"></i></button></td>
       `;
       laboratorioTableBody.appendChild(row);
-    });
+    }
   }
 
   // Busca de conjuntos
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Editar conjunto
-  window.editLaboratorio = async (id) => {
+  globalThis.window.editLaboratorio = async (id) => {
     try {
       console.log(`Carregando conjunto ${id} para edição`);
       const response = await fetch(`/api/laboratorios/${id}`, { credentials: 'include' });
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Deletar conjunto
-  window.deleteLaboratorio = async (id) => {
+  globalThis.window.deleteLaboratorio = async (id) => {
     if (!confirm('Tem certeza que deseja excluir este conjunto?')) return;
     try {
       console.log(`Excluindo conjunto ${id}`);
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Limpar formulário
-  window.clearForm = () => {
+  globalThis.window.clearForm = () => {
     console.log('Resetando formulário');
     laboratorioForm.reset();
     document.getElementById('id').value = '';
