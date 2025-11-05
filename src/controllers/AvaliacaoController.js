@@ -1,4 +1,4 @@
-//refatorado em 2024-06-10
+//refatorado em 2025-11-06
 //src/controllers/AvaliacaoController.js   arrumando
 const Avaliacao = require('../models/AvaliacaoModel');
 const pool = require('../database/db');
@@ -30,7 +30,7 @@ class AvaliacaoController {
 
   static validateBoolean(value, fieldName) {
     if (typeof value !== 'boolean') {
-      throw new Error(`O campo ${fieldName} deve ser um booleano`);
+      throw new TypeError(`O campo ${fieldName} deve ser um booleano`);
     }
   }
 
