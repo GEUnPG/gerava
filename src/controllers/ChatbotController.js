@@ -155,8 +155,8 @@ const ChatbotController = {
     }
 
     // Validação de IDs de grupos
-    const validGroups = ['technicians', 'module6', 'module7'];
-    const invalidGroups = groups.filter(g => !validGroups.includes(g));
+    const validGroups = new Set([ 'technicians', 'module6', 'module7' ]);
+    const invalidGroups = groups.filter(g => !validGroups.has(g));
     
     if (invalidGroups.length > 0) {
       return res.status(400).json({ error: `Grupos inválidos: ${invalidGroups.join(', ')}.` });
