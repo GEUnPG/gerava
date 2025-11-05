@@ -1,4 +1,4 @@
-//refatorada 2025-11-04
+//refatorada 2025-11-06
 //server.js
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -102,7 +102,7 @@ async function bruteForceProtection(req, res, next) {
       const { attempt_count, block_count, block_until, is_permanently_blocked } = result.rows[0];
 
       if (is_permanently_blocked) {
-        console.log(`IP ${ip} bloqueado permanentemente`);
+        console.log(`IP ${ip} bloqueado permanentemente! Bloqueios: ${block_count}`);
         return res.status(403).json({
           error: 'Este IP foi bloqueado permanentemente devido a múltiplas tentativas inválidas.',
           blocked: true,
@@ -110,8 +110,8 @@ async function bruteForceProtection(req, res, next) {
         });
       }
 
-      if (attempt_count >= MAX_ATTEMPTS && block_until && new Date(block_until) > new Date()) {
-        const remainingSeconds = Math.ceil((new Date(block_until) - new Date()) / 1000);
+      if (attempt_count >= MAX_ATTEMPTS && block_until && new Date(block_until) > Date.now()) {
+        const remainingSeconds = Math.ceil((new Date(block_until) - Date.now()) / 1000);
         console.log(`IP ${ip} bloqueado temporariamente. Restam ${remainingSeconds} segundos`);
         return res.status(429).json({
           error: `Muitas tentativas. Tente novamente em ${Math.ceil(remainingSeconds / 60)} minutos.`,
@@ -121,7 +121,7 @@ async function bruteForceProtection(req, res, next) {
         });
       }
 
-      if (attempt_count >= MAX_ATTEMPTS && block_until && new Date(block_until) <= new Date()) {
+      if (attempt_count >= MAX_ATTEMPTS && block_until && new Date(block_until) <= Date.now()) {
         console.log(`Bloqueio temporário expirado para IP ${ip}`);
         await pool.query('UPDATE login_attempts SET attempt_count = 0, block_until = NULL WHERE ip = $1', [ip]);
       }
@@ -443,7 +443,7 @@ try {
   // Debug routes
   app.get('/debug/routes', (req, res) => {
     const routes = [];
-    app._router.stack.forEach(middleware => {
+    for (const middleware of app._router.stack) {
       if (middleware.route) {
         routes.push({
           path: middleware.route.path,
@@ -464,7 +464,7 @@ try {
           }
         }
       }
-    });
+    }
     console.log('Listando rotas registradas:', routes);
     res.json(routes);
   });
