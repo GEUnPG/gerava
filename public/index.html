@@ -17,7 +17,8 @@
       <a href="/consulta.html" class="btn btn-outline-light me-2">Consultar Provas</a>
       <a href="/login.html" class="btn btn-primary">Acessar Sistema</a>
       <div class="form-check form-switch theme-switch m-0 d-flex align-items-center">
-        <input class="form-check-input" type="checkbox" role="switch" id="themeSwitch" aria-label="Alternar tema escuro" />
+        <!-- Corrigido: aria-checked sempre presente -->
+        <input class="form-check-input" type="checkbox" role="switch" id="themeSwitch" aria-label="Alternar tema escuro" aria-checked="false">
         <label class="form-check-label ms-2" for="themeSwitch">
           <span class="d-none d-sm-inline">Tema</span>
         </label>
@@ -122,3 +123,4 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> <!-- [web:32] -->
 </body>
 </html>
+
