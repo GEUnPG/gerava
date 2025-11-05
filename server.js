@@ -70,6 +70,73 @@ function serveProtectedPage(pageName) {
   };
 }
 
+// ===== DEBUG ROUTES HELPERS =====
+
+function extractDirectRoute(middleware) {
+  if (!middleware.route) return null;
+  
+  return {
+    path: middleware.route.path,
+    methods: Object.keys(middleware.route.methods),
+  };
+}
+
+function getRouterPrefix(middleware) {
+  const source = middleware.regexp.source;
+  
+  if (source.includes('avaliacoes')) return '/api/avaliacoes';
+  if (source.includes('chatbot')) return '/api/chatbot';
+  if (source.includes('professores')) return '/api/professores';
+  if (source.includes('usuarios')) return '/api/usuarios';
+  if (source.includes('modulos')) return '/api/modulos';
+  if (source.includes('disciplinas')) return '/api/disciplinas';
+  if (source.includes('laboratorios')) return '/api/laboratorios';
+  if (source.includes('consulta')) return '/api/consulta';
+  if (source.includes('arquivo')) return '/api/arquivo';
+  if (source.includes('situacao_aval')) return '/api/situacao_aval';
+  if (source.includes('tipo_aval')) return '/api/tipo_aval';
+  if (source.includes('login-secreto')) return '/api/login-secreto';
+  
+  return '';
+}
+
+function extractRouterRoutes(middleware) {
+  if (middleware.name !== 'router' || !middleware.handle?.stack) {
+    return [];
+  }
+  
+  const prefix = getRouterPrefix(middleware);
+  const routes = [];
+  
+  for (const handler of middleware.handle.stack) {
+    if (handler.route) {
+      routes.push({
+        path: `${prefix}${handler.route.path}`,
+        methods: Object.keys(handler.route.methods),
+      });
+    }
+  }
+  
+  return routes;
+}
+
+function collectAllRoutes(app) {
+  const routes = [];
+  
+  for (const middleware of app._router.stack) {
+    const directRoute = extractDirectRoute(middleware);
+    if (directRoute) {
+      routes.push(directRoute);
+      continue;
+    }
+    
+    const routerRoutes = extractRouterRoutes(middleware);
+    routes.push(...routerRoutes);
+  }
+  
+  return routes;
+}
+
 // ===== MIDDLEWARES =====
 
 function isAuthenticated(req, res, next) {
@@ -158,12 +225,10 @@ async function handleLoginAttempt(ip, username, password) {
   const currentAttemptCount = attemptsResult.rows[0].attempt_count;
   const currentBlockCount = attemptsResult.rows[0].block_count;
 
-  // Validar credenciais
   if (userResult.rows.length === 0 || !(await bcrypt.compare(password, userResult.rows[0].password))) {
     return await handleFailedLogin(ip, usuario_id, currentAttemptCount, currentBlockCount);
   }
 
-  // Login bem-sucedido
   await pool.query('UPDATE login_attempts SET attempt_count = 0, block_count = 0, block_until = NULL WHERE ip = $1', [
     ip,
   ]);
@@ -440,31 +505,9 @@ try {
     res.json({ message: 'Servidor funcionando corretamente' });
   });
 
-  // Debug routes
+  // ===== DEBUG ROUTE (DEVE FICAR AQUI, APÓS TODAS AS ROTAS) =====
   app.get('/debug/routes', (req, res) => {
-    const routes = [];
-    for (const middleware of app._router.stack) {
-      if (middleware.route) {
-        routes.push({
-          path: middleware.route.path,
-          methods: Object.keys(middleware.route.methods),
-        });
-      } else if (middleware.name === 'router' && middleware.handle.stack) {
-        const prefix = middleware.regexp.source.includes('avaliacoes')
-          ? '/api/avaliacoes'
-          : middleware.regexp.source.includes('chatbot')
-          ? '/api/chatbot'
-          : '';
-        for (const handler of middleware.handle.stack) {
-          if (handler.route) {
-            routes.push({
-              path: `${prefix}${handler.route.path}`,
-              methods: Object.keys(handler.route.methods),
-            });
-          }
-        }
-      }
-    }
+    const routes = collectAllRoutes(app);
     console.log('Listando rotas registradas:', routes);
     res.json(routes);
   });
@@ -487,3 +530,4 @@ try {
 } catch (error) {
   console.error('❌ Erro ao iniciar o servidor:', error.message, error.stack);
 }
+// ===== FIM DO ARQUIVO =====
