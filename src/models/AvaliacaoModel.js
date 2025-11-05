@@ -1,4 +1,4 @@
-//refatorado em 2024-06-10
+//refatorado em 2025-11-06
 // src/models/AvaliacaoModel.js  rumando
 const pool = require('../database/db');
 const erro_prof = 'modulo_id, disciplina_id e professor_id devem ser números inteiros';
@@ -26,7 +26,7 @@ class Avaliacao {
 
   static validateIntegerIds(modulo_id, disciplina_id, professor_id) {
     if (!Number.isInteger(modulo_id) || !Number.isInteger(disciplina_id) || !Number.isInteger(professor_id)) {
-      throw new Error(erro_prof);
+      throw new TypeError(erro_prof);
     }
   }
 
@@ -80,7 +80,7 @@ class Avaliacao {
     );
 
     if (!Array.isArray(laboratorios)) {
-      throw new Error('laboratorios deve ser um array');
+      throw new TypeError('laboratorios deve ser um array');
     }
 
     this.validateDataFormat(dataAvaliacao);
@@ -376,4 +376,3 @@ class Avaliacao {
 }
 
 module.exports = Avaliacao;
-
