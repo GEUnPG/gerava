@@ -1,3 +1,4 @@
+/*Refatorado 2025-11-05*/
 :root {
       --bg: #ffffff;
       --text: #212529;
@@ -18,8 +19,6 @@
       --accent-success: #30c173;
       --shadow: 0px 6px 16px rgba(0,0,0,0.45);
     }
-    
-    /*.theme-light { }*/
 
     html, body { background: var(--bg); color: var(--text); } /* [web:29] */
 

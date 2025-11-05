@@ -1,4 +1,5 @@
 /* Reset básico */
+/*Refatorado 2025-11-05*/
 * {
     margin: 0;
     padding: 0;
@@ -83,7 +84,7 @@
   
   #avaliacao-form button {
     grid-column: span 2;
-    background: #3498db;
+    background: #1769aa;
     color: #fff;
     border: none;
     cursor: pointer;
@@ -137,7 +138,7 @@
   }
   
   #avaliacao-table button:first-child {
-    background: #2ecc71;
+    background: #03753c;
     color: #fff;
   }
   
@@ -146,31 +147,12 @@
   }
   
   #avaliacao-table button:last-child {
-    background: #e74c3c;
+    background: #c0392b;
     color: #fff;
   }
   
   #avaliacao-table button:last-child:hover {
     background: #c0392b;
-  }
-  
-  /* Mensagens de feedback */
-  #feedback {
-    display: none;
-    padding: 10px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    text-align: center;
-  }
-  
-  #feedback.success {
-    background: #dff0d8;
-    color: #3c763d;
-  }
-  
-  #feedback.error {
-    background: #f2dede;
-    color: #a94442;
   }
 
   #search {
@@ -234,12 +216,29 @@ header h1 {
 
 .btn { min-width: 100px; }
 
+/* Mensagens de feedback */
+  #feedback {
+    display: none;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.3s ease;
+  }
+  
+  #feedback.success {
+    background: #dff0d8;
+    color: #3c763d;
+  }
+  
+  #feedback.error {
+    background: #f2dede;
+    color: #a94442;
+  }
+
 /* Feedback no login */
-#feedback {
-  font-size: 0.9rem;
-  font-weight: 500;
-  transition: opacity 0.3s ease;
-}
 
 #feedback.text-error {
   color: #ef4444;
