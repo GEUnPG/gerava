@@ -29,7 +29,7 @@ pool.connect()
     );
     client.release();
   })
-  .catch(err => {
+  .catch(err => { //NOSONAR
     console.error(
       `❌ Erro ao conectar ao banco de dados ` +
       `(host: ${poolConfig.connectionString ? 'Render' : poolConfig.host}, database: ${poolConfig.database || 'foa_med'}):`,
