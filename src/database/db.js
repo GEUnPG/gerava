@@ -20,7 +20,7 @@ console.log('✅ Pool configurado com connectionString do ambiente.');
 const pool = new Pool(poolConfig);
 
 // ✅ SOLUÇÃO: IIFE async para permitir await
-(async () => {
+(async () => { //NOSONAR
   try {
     const client = await pool.connect();
     console.log('✅ Conexão com PostgreSQL estabelecida com sucesso.');
