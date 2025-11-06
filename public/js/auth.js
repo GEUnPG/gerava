@@ -1,4 +1,4 @@
-(async () => {
+(async () => { //NOSONAR
   try {
     const response = await fetch('/api/user', { credentials: 'include' });
     if (!response.ok) {
@@ -20,4 +20,5 @@ async function logout() {
   } catch (error) {
     console.error('Erro ao fazer logout:', error);
   }
+
 }
