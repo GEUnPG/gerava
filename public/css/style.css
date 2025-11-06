@@ -216,6 +216,20 @@ header h1 {
 
 .btn { min-width: 100px; }
 
+/*botão drop da página gerenciar.html*/
+.botao_drop { 
+  min-width: auto; 
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  align-items: left;
+}
+
 /* Mensagens de feedback */
   #feedback {
     display: none;

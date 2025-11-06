@@ -42,13 +42,21 @@
       color: #fff;
       border-bottom: 1px solid var(--border);
     } /* [web:32] */
-    .theme-dark .header a.btn.btn-outline-light {
+    .theme-dark .header .h1 a.btn.btn-outline-light {
       color: #f8f9fa;
       border-color: #f8f9fa;
     } /* [web:32] */
     .theme-dark .header a.btn.btn-outline-light:hover {
       color: #0b0f1a;
       background-color: #f8f9fa;
+    } /* [web:32] */
+
+    .theme-dark .titulo{ /*Remover se der ruim*/
+      color: #ffffff;
+    } /* [web:32] */
+
+    .theme-dark .bem-vindo{ /*Remover se der ruim*/
+      color: #ffffff;
     } /* [web:32] */
 
     /* Footer permanece escuro para ambos (ajuste se quiser claro no tema claro) */
