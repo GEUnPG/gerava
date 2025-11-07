@@ -8,7 +8,7 @@
     // Pega título da página do dataset ou do título atual
     const providedTitle =
       target.dataset.title ||
-      window.PAGE_TITLE ||
+      globalThis.window.PAGE_TITLE ||
       document.title ||
       'GerAva';
     // Markup do header
@@ -45,3 +45,4 @@
     mount();
   }
 })();
+
