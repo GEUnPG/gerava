@@ -1,8 +1,8 @@
 // Carrega o footer dinamicamente dentro de #app-footer
 (function () {
   // Evita rodar duas vezes
-  if (window.__footerLoaded) return;
-  window.__footerLoaded = true;
+  if (globalThis.window.__footerLoaded) return;
+  globalThis.window.__footerLoaded = true;
 
   function toggleFeedback() {
     const card = document.getElementById('feedback-card');
@@ -10,7 +10,7 @@
     card.classList.toggle('show');
   }
   // expõe a função se você usa onclick no HTML
-  window.toggleFeedback = toggleFeedback;
+  globalThis.window.toggleFeedback = toggleFeedback;
 
   const mount = () => {
     const target = document.getElementById('app-footer');
@@ -83,3 +83,4 @@
     mount();
   }
 })();
+
