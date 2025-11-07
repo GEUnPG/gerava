@@ -29,7 +29,7 @@
         <ul class="list-unstyled">
           <li><a href="/login.html" class="text-decoration-none text-light"><i class="fas fa-sign-in-alt me-2"></i>Acessar Sistema</a></li>
           <li><a href="/consulta.html" class="text-decoration-none text-light"><i class="fas fa-search me-2"></i>Consultar Provas</a></li>
-          <li><a href="https://forms.gle/seu-formulario" target="_blank" class="text-decoration-none text-light"><i class="fas fa-comment-dots me-2"></i>Feedback</a></li>
+          <li><a href="https://forms.gle/89sGe4aBUTT7A3me8" target="_blank" class="text-decoration-none text-light"><i class="fas fa-comment-dots me-2"></i>Feedback</a></li>
         </ul>
       </div>
       <div class="col-md-4 mb-3">
@@ -60,7 +60,7 @@
     <div>
       <h6 class="fw-bold mb-1">Ajude-nos a melhorar!</h6>
       <p class="mb-2 small text-muted">Responda o formulário e compartilhe com a gente sua opinião.</p>
-      <a href="https://forms.gle/seu-formulario" target="_blank" class="btn btn-success btn-sm">Responder</a>
+      <a href="https://forms.gle/89sGe4aBUTT7A3me8" target="_blank" class="btn btn-success btn-sm">Responder</a>
     </div>
   </div>
   <button class="btn-close position-absolute top-0 end-0 m-2" aria-label="Fechar"></button>
@@ -83,4 +83,5 @@
     mount();
   }
 })();
+
 
