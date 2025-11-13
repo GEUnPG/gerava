@@ -3,41 +3,19 @@
 const { Pool } = require('pg');
 require('dotenv').config(); // garantir que o .env seja lido em ambiente local
 
-// Configuração do pool: usa DATABASE_URL se disponível, senão usa variáveis DB_*.
-const {
-  DATABASE_URL,
-  DB_HOST,
-  DB_USER,
-  DB_PASSWORD,
-  DB_NAME,
-  DB_PORT,
-  DB_SSL,
-  NODE_ENV,
-} = process.env;
+// Uso a variável de ambiente DATABASE_URL ou uma string local de fallback
+const connectionString = process.env.DATABASE_URL;
+const poolConfig = {
+  connectionString,
+  ssl: {
+    rejectUnauthorized: false, // necessário para Render
+  },
+  max: 10,
+  idleTimeoutMillis: 10000,
+  connectionTimeoutMillis: 60000,
+};
 
-const enableSSL = NODE_ENV === 'production' || DB_SSL === 'true';
-
-const poolConfig = DATABASE_URL
-  ? {
-      connectionString: DATABASE_URL,
-      ...(enableSSL ? { ssl: { rejectUnauthorized: false } } : {}),
-      max: 10,
-      idleTimeoutMillis: 10000,
-      connectionTimeoutMillis: 60000,
-    }
-  : {
-      user: DB_USER || 'postgres',
-      host: DB_HOST || 'localhost',
-      database: DB_NAME || 'postgres',
-      password: DB_PASSWORD || '',
-      port: DB_PORT ? parseInt(DB_PORT, 10) : 5432,
-      ...(enableSSL ? { ssl: { rejectUnauthorized: false } } : {}),
-      max: 10,
-      idleTimeoutMillis: 10000,
-      connectionTimeoutMillis: 60000,
-    };
-
-console.log('✅ Pool configurado com configuração de ambiente.');
+console.log('✅ Pool configurado com connectionString do ambiente.');
 
 const pool = new Pool(poolConfig);
 
