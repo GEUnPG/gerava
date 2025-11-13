@@ -31,7 +31,21 @@ class UsuariosController {
       if (!nome || !username || !password) {
         return res.status(400).json({ error: 'Nome, username e password são obrigatórios' });
       }
-      const usuario = await UsuariosModel.create({ nome, username, password });
+      // validar caracteres do nome: permitir letras (incluindo acentos), espaços, hífen e apóstrofo
+      const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'\-]+$/;
+      if (!nomeRegex.test(nome)) {
+        return res.status(400).json({ error: 'Nome contém caracteres inválidos' });
+      }
+
+      const client = req.dbClient || null;
+
+      // checar username único dentro da mesma transação (se houver)
+      const existente = await UsuariosModel.getByUsername(username, client);
+      if (existente) {
+        return res.status(400).json({ error: 'Username já existe' });
+      }
+
+      const usuario = await UsuariosModel.create({ nome, username, password }, client);
       res.status(201).json(usuario);
     } catch (error) {
       res.status(500).json({ error: 'Erro ao criar usuário', details: error.message });
@@ -45,7 +59,19 @@ class UsuariosController {
       if (!nome || !username || !password) {
         return res.status(400).json({ error: 'Nome, username e password são obrigatórios' });
       }
-      const usuario = await UsuariosModel.update(req.params.id, { nome, username, password });
+      const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'\-]+$/;
+      if (!nomeRegex.test(nome)) {
+        return res.status(400).json({ error: 'Nome contém caracteres inválidos' });
+      }
+
+      const client = req.dbClient || null;
+      // opcional: checar se outro usuário já usa o username
+      const existente = await UsuariosModel.getByUsername(username, client);
+      if (existente && String(existente.id) !== String(req.params.id)) {
+        return res.status(400).json({ error: 'Username já existe' });
+      }
+
+      const usuario = await UsuariosModel.update(req.params.id, { nome, username, password }, client);
       if (!usuario) {
         return res.status(404).json({ error: 'Usuário não encontrado' });
       }
