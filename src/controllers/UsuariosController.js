@@ -59,7 +59,7 @@ class UsuariosController {
       if (!nome || !username || !password) {
         return res.status(400).json({ error: 'Nome, username e password são obrigatórios' });
       }
-      const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'\-]+$/;
+      const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
       if (!nomeRegex.test(nome)) {
         return res.status(400).json({ error: 'Nome contém caracteres inválidos' });
       }
