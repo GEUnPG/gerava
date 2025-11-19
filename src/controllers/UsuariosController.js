@@ -32,7 +32,7 @@ class UsuariosController {
         return res.status(400).json({ error: 'Nome, username e password são obrigatórios' });
       }
       // validar caracteres do nome: permitir letras (incluindo acentos), espaços, hífen e apóstrofo
-      const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'\-]+$/;
+      const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
       if (!nomeRegex.test(nome)) {
         return res.status(400).json({ error: 'Nome contém caracteres inválidos' });
       }
