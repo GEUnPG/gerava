@@ -84,7 +84,8 @@ class UsuariosController {
   // Excluir usuário
   static async delete(req, res) {
     try {
-      const result = await UsuariosModel.delete(req.params.id);
+      const client = req.dbClient || null;
+      const result = await UsuariosModel.delete(req.params.id, client);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error: 'Erro ao excluir usuário', details: error.message });
