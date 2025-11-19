@@ -1,5 +1,23 @@
 const UsuariosModel = require('../models/UsuariosModel');
 
+// Utilitários para validação
+function validarCamposObrigatorios({ nome, username, password }, res) {
+  if (!nome || !username || !password) {
+    res.status(400).json({ error: 'Nome, username e password são obrigatórios' });
+    return false;
+  }
+  return true;
+}
+
+function validarNome(nome, res) {
+  const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
+  if (!nomeRegex.test(nome)) {
+    res.status(400).json({ error: 'Nome contém caracteres inválidos' });
+    return false;
+  }
+  return true;
+}
+
 class UsuariosController {
   // Listar todos os usuários
   static async getAll(req, res) {
@@ -26,25 +44,17 @@ class UsuariosController {
 
   // Criar usuário
   static async create(req, res) {
+    const { nome, username, password } = req.body;
+    if (!validarCamposObrigatorios({ nome, username, password }, res)) return;
+    if (!validarNome(nome, res)) return;
+
     try {
-      const { nome, username, password } = req.body;
-      if (!nome || !username || !password) {
-        return res.status(400).json({ error: 'Nome, username e password são obrigatórios' });
-      }
-      // validar caracteres do nome: permitir letras (incluindo acentos), espaços, hífen e apóstrofo
-      const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
-      if (!nomeRegex.test(nome)) {
-        return res.status(400).json({ error: 'Nome contém caracteres inválidos' });
-      }
-
       const client = req.dbClient || null;
-
       // checar username único dentro da mesma transação (se houver)
       const existente = await UsuariosModel.getByUsername(username, client);
       if (existente) {
         return res.status(400).json({ error: 'Username já existe' });
       }
-
       const usuario = await UsuariosModel.create({ nome, username, password }, client);
       res.status(201).json(usuario);
     } catch (error) {
@@ -54,23 +64,17 @@ class UsuariosController {
 
   // Atualizar usuário
   static async update(req, res) {
-    try {
-      const { nome, username, password } = req.body;
-      if (!nome || !username || !password) {
-        return res.status(400).json({ error: 'Nome, username e password são obrigatórios' });
-      }
-      const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
-      if (!nomeRegex.test(nome)) {
-        return res.status(400).json({ error: 'Nome contém caracteres inválidos' });
-      }
+    const { nome, username, password } = req.body;
+    if (!validarCamposObrigatorios({ nome, username, password }, res)) return;
+    if (!validarNome(nome, res)) return;
 
+    try {
       const client = req.dbClient || null;
       // opcional: checar se outro usuário já usa o username
       const existente = await UsuariosModel.getByUsername(username, client);
       if (existente && String(existente.id) !== String(req.params.id)) {
         return res.status(400).json({ error: 'Username já existe' });
       }
-
       const usuario = await UsuariosModel.update(req.params.id, { nome, username, password }, client);
       if (!usuario) {
         return res.status(404).json({ error: 'Usuário não encontrado' });
