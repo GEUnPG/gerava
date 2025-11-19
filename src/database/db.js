@@ -30,7 +30,7 @@ const poolConfig = DATABASE_URL
       host: DB_HOST || 'localhost',
       database: DB_NAME || 'postgres',
       password: DB_PASSWORD || '',
-      port: DB_PORT ? parseInt(DB_PORT, 10) : 5432,
+      port: DB_PORT ? Number.parseInt(DB_PORT, 10) : 5432,
       ...(enableSSL ? { ssl: { rejectUnauthorized: false } } : {}),
       max: 10,
       idleTimeoutMillis: 10000,
