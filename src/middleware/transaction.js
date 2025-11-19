@@ -8,8 +8,8 @@ module.exports = async function transactionMiddleware(req, res, next) {
     // Se não conseguimos iniciar a transação, liberamos o client e propagamos o erro
     try {
         client.release();
-    } catch (releaseErr) {
-        console.error('Erro ao liberar client:', releaseErr); // CORREÇÃO AQ
+    } catch (error_) {
+        console.error('Erro ao liberar client:', error_); // CORREÇÃO AQ
     }
     return next(err);
   }
@@ -28,8 +28,8 @@ module.exports = async function transactionMiddleware(req, res, next) {
     } finally {
       try {
         client.release();
-      } catch (releaseErr) {
-        console.error('Erro ao liberar client:', releaseErr); // MESMA CORREÇÃO AQ
+      } catch (error_) {
+        console.error('Erro ao liberar client:', error_); // MESMA CORREÇÃO AQ
       }
     }
   });
@@ -37,13 +37,13 @@ module.exports = async function transactionMiddleware(req, res, next) {
     if (!res.writableEnded) {
       try {
         await client.query('ROLLBACK');
-      } catch (rollbackErr) {
-        console.error('Erro ao fazer rollback:', rollbackErr);
+      } catch (error_) {
+        console.error('Erro ao fazer rollback:', error_);
       }
       try {
         client.release();
-      } catch (releaseErr) {
-        console.error('Erro ao liberar client:', releaseErr); // NOVAMENTE
+      } catch (error_) {
+        console.error('Erro ao liberar client:', error_); // NOVAMENTE
       }
       console.log('[transaction] ROLLBACK (connection closed)');
     }
