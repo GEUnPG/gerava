@@ -11,6 +11,7 @@ const { startChatbot, registerWebSocket } = require('./chatbot/chatbot');
 const rateLimit = require('express-rate-limit');
 const { WebSocketServer } = require('ws');
 const http = require('node:http');
+const cors = require('cors');
 
 // Routes imports
 const professorRoutes = require('./src/routes/professorRoutes');
@@ -31,6 +32,7 @@ require('dotenv').config();
 console.log('=== Iniciando servidor ===');
 
 const app = express();
+app.use(cors());
 
 // ===== CONSTANTES =====
 
