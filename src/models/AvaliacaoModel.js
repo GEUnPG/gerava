@@ -227,7 +227,7 @@ class Avaliacao {
     let params = [];
     
     if (search) {
-      whereClause += ` AND (a.data::text ILIKE $1 OR m.nome ILIKE $1 OR p.nome ILIKE $1 OR a.horario_ini::text ILIKE $1)`;
+      whereClause += ` AND (a.data::text ILIKE $1 OR m.nome ILIKE $1 OR p.nome ILIKE $1 OR d.descricao ILIKE $1 OR a.horario_ini::text ILIKE $1)`;
       params.push(`%${search}%`);
     }
     params.push(limit, offset);

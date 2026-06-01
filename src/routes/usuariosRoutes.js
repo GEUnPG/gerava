@@ -1,15 +1,14 @@
+//usuariosRoutes.js de acordo com o novo controller e middleware para transações. jogar para o repositório
 const express = require('express');
 const router = express.Router();
 const UsuariosController = require('../controllers/UsuariosController');
-const transaction = require('../middleware/transaction');
-const UsuariosModel = require('../models/UsuariosModel');
+const validateUser = require('../middleware/validateUser'); // 🔥 ajuste singular/plural conforme sua pasta
 
 // Rotas do CRUD
-router.get('/', UsuariosController.getAll); // Listar todos os usuários
-router.get('/:id', UsuariosController.getById); // Obter usuário por ID
-// Usar middleware de transação nas rotas que modificam dados
-router.post('/', transaction, UsuariosController.create); // Criar usuário
-router.put('/:id', transaction, UsuariosController.update); // Atualizar usuário
-router.delete('/:id', transaction, UsuariosController.delete); // Excluir usuário
+router.get('/', UsuariosController.getAll);
+router.get('/:id', UsuariosController.getById);
+router.post('/', validateUser, UsuariosController.create);   // valida antes de criar
+router.put('/:id', validateUser, UsuariosController.update); // valida antes de atualizar
+router.delete('/:id', UsuariosController.delete);
 
 module.exports = router;

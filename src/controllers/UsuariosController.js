@@ -1,22 +1,5 @@
+//usuariosController.js atualizado com tratamento de erros e validação básica. jogar para o repositório
 const UsuariosModel = require('../models/UsuariosModel');
-
-// Utilitários para validação
-function validarCamposObrigatorios({ nome, username, password }, res) {
-  if (!nome || !username || !password) {
-    res.status(400).json({ error: 'Nome, username e password são obrigatórios' });
-    return false;
-  }
-  return true;
-}
-
-function validarNome(nome, res) {
-  const nomeRegex = /^[A-Za-zÀ-ÖØ-öø-ÿ\s'-]+$/;
-  if (!nomeRegex.test(nome)) {
-    res.status(400).json({ error: 'Nome contém caracteres inválidos' });
-    return false;
-  }
-  return true;
-}
 
 class UsuariosController {
   // Listar todos os usuários
@@ -44,18 +27,12 @@ class UsuariosController {
 
   // Criar usuário
   static async create(req, res) {
-    const { nome, username, password } = req.body;
-    if (!validarCamposObrigatorios({ nome, username, password }, res)) return;
-    if (!validarNome(nome, res)) return;
-
     try {
-      const client = req.dbClient || null;
-      // checar username único dentro da mesma transação (se houver)
-      const existente = await UsuariosModel.getByUsername(username, client);
-      if (existente) {
-        return res.status(400).json({ error: 'Username já existe' });
+      const { nome, username, password } = req.body;
+      if (!nome || !username || !password) {
+        return res.status(400).json({ error: 'Nome, username e password são obrigatórios' });
       }
-      const usuario = await UsuariosModel.create({ nome, username, password }, client);
+      const usuario = await UsuariosModel.create({ nome, username, password });
       res.status(201).json(usuario);
     } catch (error) {
       res.status(500).json({ error: 'Erro ao criar usuário', details: error.message });
@@ -64,18 +41,12 @@ class UsuariosController {
 
   // Atualizar usuário
   static async update(req, res) {
-    const { nome, username, password } = req.body;
-    if (!validarCamposObrigatorios({ nome, username, password }, res)) return;
-    if (!validarNome(nome, res)) return;
-
     try {
-      const client = req.dbClient || null;
-      // opcional: checar se outro usuário já usa o username
-      const existente = await UsuariosModel.getByUsername(username, client);
-      if (existente && String(existente.id) !== String(req.params.id)) {
-        return res.status(400).json({ error: 'Username já existe' });
+      const { nome, username, password } = req.body;
+      if (!nome || !username || !password) {
+        return res.status(400).json({ error: 'Nome, username e password são obrigatórios' });
       }
-      const usuario = await UsuariosModel.update(req.params.id, { nome, username, password }, client);
+      const usuario = await UsuariosModel.update(req.params.id, { nome, username, password });
       if (!usuario) {
         return res.status(404).json({ error: 'Usuário não encontrado' });
       }
@@ -88,8 +59,7 @@ class UsuariosController {
   // Excluir usuário
   static async delete(req, res) {
     try {
-      const client = req.dbClient || null;
-      const result = await UsuariosModel.delete(req.params.id, client);
+      const result = await UsuariosModel.delete(req.params.id);
       res.json(result);
     } catch (error) {
       res.status(500).json({ error: 'Erro ao excluir usuário', details: error.message });

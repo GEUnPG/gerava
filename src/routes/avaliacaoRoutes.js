@@ -1,4 +1,4 @@
-//arrumando
+//src/routes/avaliacaoRoutes.js arrumando
 const express = require('express');
 const router = express.Router();
 const AvaliacaoController = require('../controllers/AvaliacaoController');
@@ -12,33 +12,32 @@ router.get('/', (req, res, next) => {
   AvaliacaoController.list(req, res, next);
 });
 
-// Rotas protegidas
-router.get('/professores', isAuthenticated, (req, res, next) => {
+router.get('/professores', (req, res, next) => {
   console.log('📩 Acessando GET /api/avaliacoes/professores');
   AvaliacaoController.getProfessores(req, res, next);
 });
 
-router.get('/disciplinas', isAuthenticated, (req, res, next) => {
+router.get('/disciplinas', (req, res, next) => {
   console.log('📩 Acessando GET /api/avaliacoes/disciplinas');
   AvaliacaoController.getDisciplinas(req, res, next);
 });
 
-router.get('/all-laboratorios', isAuthenticated, (req, res, next) => {
+router.get('/all-laboratorios', (req, res, next) => {
   console.log('📩 Acessando GET /api/avaliacoes/all-laboratorios');
   AvaliacaoController.getAllLaboratorios(req, res, next);
 });
 
-router.get('/modulos', isAuthenticated, (req, res, next) => {
+router.get('/modulos', (req, res, next) => {
   console.log('📩 Acessando GET /api/avaliacoes/modulos');
   AvaliacaoController.getModulos(req, res, next);
 });
 
-router.get('/situacoes', isAuthenticated, (req, res, next) => {
+router.get('/situacoes', (req, res, next) => {
   console.log('📩 Acessando GET /api/avaliacoes/situacoes');
   AvaliacaoController.getSituacoes(req, res, next);
 });
 
-router.get('/tipos', isAuthenticated, (req, res, next) => {
+router.get('/tipos', (req, res, next) => {
   console.log('📩 Acessando GET /api/avaliacoes/tipos');
   AvaliacaoController.getTipos(req, res, next);
 });
@@ -53,7 +52,7 @@ router.post('/', isAuthenticated, (req, res, next) => {
   AvaliacaoController.create(req, res, next);
 });
 
-router.get('/:id', isAuthenticated, (req, res, next) => {
+router.get('/:id', (req, res, next) => {
   console.log(`📩 Acessando GET /api/avaliacoes/${req.params.id}`);
   AvaliacaoController.getById(req, res, next);
 });
@@ -62,6 +61,11 @@ router.put('/:id', isAuthenticated, (req, res, next) => {
   console.log(`📩 Acessando PUT /api/avaliacoes/${req.params.id}`, req.body);
   AvaliacaoController.update(req, res, next);
 });
+
+// router.delete('/:id', isAuthenticated, (req, res, next) => {
+//   console.log(`📩 Acessando DELETE /api/avaliacoes/${req.params.id}`);
+//   AvaliacaoController.delete(req, res, next);
+// });
 
 router.patch('/:id/visivel', isAuthenticated, (req, res, next) => {
   console.log(`📩 Acessando PATCH /api/avaliacoes/${req.params.id}/visivel`, req.body);

@@ -1,55 +1,63 @@
-//refatorado 2025-06-10
-// db.js utilizado para executar no render
+// src/database/db.js
+require('dotenv').config();
 const { Pool } = require('pg');
-require('dotenv').config(); // garantir que o .env seja lido em ambiente local
 
-// Configuração do pool: usa DATABASE_URL se disponível, senão usa variáveis DB_*.
-const {
-  DATABASE_URL,
-  DB_HOST,
-  DB_USER,
-  DB_PASSWORD,
-  DB_NAME,
-  DB_PORT,
-  DB_SSL,
-  NODE_ENV,
-} = process.env;
+// Detecta se está rodando no Render
+const isRender = !!process.env.RENDER || !!process.env.RENDER_SERVICE_ID;
+const hasDatabaseUrl = !!process.env.DATABASE_URL;
 
-const enableSSL = NODE_ENV === 'production' || DB_SSL === 'true';
+// 🧩 Cria configuração do pool
+let poolConfig;
 
-const poolConfig = DATABASE_URL
-  ? {
-      connectionString: DATABASE_URL,
-      ...(enableSSL ? { ssl: { rejectUnauthorized: false } } : {}),
-      max: 10,
-      idleTimeoutMillis: 10000,
-      connectionTimeoutMillis: 60000,
-    }
-  : {
-      user: DB_USER || 'postgres',
-      host: DB_HOST || 'localhost',
-      database: DB_NAME || 'postgres',
-      password: DB_PASSWORD || '',
-      port: DB_PORT ? Number.parseInt(DB_PORT, 10) : 5432,
-      ...(enableSSL ? { ssl: { rejectUnauthorized: false } } : {}),
-      max: 10,
-      idleTimeoutMillis: 10000,
-      connectionTimeoutMillis: 60000,
-    };
+if (hasDatabaseUrl) {
+  // Caso tenha DATABASE_URL (Render interno ou externo)
+  poolConfig = {
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false, // Necessário para Render (interno ou externo)
+    },
+  };
+} else {
+  // Caso local (sem DATABASE_URL)
+  poolConfig = {
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_NAME || 'postgres',
+    port: process.env.DB_PORT || 5432,
+    ssl: process.env.DB_SSL === 'true' ? { rejectUnauthorized: false } : false,
+  };
+}
 
-console.log('✅ Pool configurado com configuração de ambiente.');
+// Configurações adicionais
+poolConfig.max = 10;
+poolConfig.idleTimeoutMillis = 10000;
+poolConfig.connectionTimeoutMillis = 60000;
 
 const pool = new Pool(poolConfig);
 
-// ✅ SOLUÇÃO: IIFE async para permitir await
-(async () => { //NOSONAR
-  try {
-    const client = await pool.connect();
-    console.log('✅ Conexão com PostgreSQL estabelecida com sucesso.');
+// Teste de conexão
+pool.connect()
+  .then(client => {
+    const ambiente = hasDatabaseUrl
+      ? (isRender ? '🌐 Render.com (produção)' : '💻 Local com DATABASE_URL (Render Externo)')
+      : '💻 Localhost (desenvolvimento)';
+
+    console.log('✅ Conexão com o banco de dados PostgreSQL estabelecida com sucesso!');
+    console.log(`   → Ambiente: ${ambiente}`);
+    console.log(`   → Banco: ${poolConfig.database || '(via DATABASE_URL)'}`);
+    console.log(`   → SSL: ${poolConfig.ssl ? 'Ativado' : 'Desativado'}`);
+
     client.release();
-  } catch (err) {
-    console.error('❌ Erro ao conectar ao banco de dados:', err.message);
-  }
-})();
+  })
+  .catch(err => {
+    const ambiente = hasDatabaseUrl
+      ? (isRender ? '🌐 Render.com (produção)' : '💻 Local com DATABASE_URL (Render Externo)')
+      : '💻 Localhost (desenvolvimento)';
+
+    console.error('❌ Falha ao conectar ao banco de dados:');
+    console.error(`   → Ambiente: ${ambiente}`);
+    console.error(`   → Erro: ${err.message}`);
+  });
 
 module.exports = pool;
